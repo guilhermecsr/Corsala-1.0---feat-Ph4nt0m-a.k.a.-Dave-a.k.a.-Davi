@@ -1,0 +1,16 @@
+32 x 42 pixels
+bueiros
+chao
+escada
+paredes 1 - 11
+portao_pedra
+pilar_baixo_fino
+pilar_baixo_largo
+pilar_grande_fino
+
+
+41 x 69 pixels
+teto_preto
+
+41 x 78 pixels
+parede_montada 1 - 3
