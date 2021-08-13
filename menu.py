@@ -41,7 +41,6 @@ class Menu:
             if self.mouse.is_over_object(self.button_exit) and self.mouse.is_button_pressed(1):
                 break
 
-
             self.button_start = Sprite("assets/Start_button1.png")
             self.button_start.x = self.janela.width / 2 - self.button.width / 2
             self.button_start.y = self.janela.height / 2 - self.button.height / 2
