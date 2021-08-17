@@ -1,5 +1,5 @@
 import csv
-
+import hud
 import mapa
 from PPlay.sprite import *
 from PPlay.gameimage import *
@@ -11,6 +11,7 @@ class Game:
     def __init__(self, janela):
         self.janela = janela
         self.teclado = Keyboard()
+        self.hud = hud.Hud(self.janela)
 
         # carrega o mapa
         self.mapa = mapa.Mapa(self.janela)
@@ -48,5 +49,8 @@ class Game:
             #     self.player.update()
 
             self.mapa.desenha_layer(2)
+
+            # desenha H.U.D.
+            self.hud.draw_hud()
 
             self.janela.update()
