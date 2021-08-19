@@ -20,6 +20,10 @@ class Mapa:
         self.esq = False
         self.cim = False
         self.bai = False
+        self.virado_dir = False
+        self.virado_esq = False
+        self.virado_cim = False
+        self.virado_bai = False
 
     def move_player(self, player, velocidade):
         self.velocidade = velocidade
@@ -27,24 +31,40 @@ class Mapa:
             for j in range(len(self.mapa[i])):
                 if self.teclado.key_pressed("LEFT"):
                     self.esq = True
+                    self.virado_esq = True
+                    self.virado_dir = False
+                    self.virado_cim = False
+                    self.virado_bai = False
                     self.mapa[i][j].x += self.velocidade * self.janela.delta_time()
                 else:
                     self.esq = False
 
                 if self.teclado.key_pressed("RIGHT"):
                     self.dir = True
+                    self.virado_dir = True
+                    self.virado_esq = False
+                    self.virado_cim = False
+                    self.virado_bai = False
                     self.mapa[i][j].x -= self.velocidade * self.janela.delta_time()
                 else:
                     self.dir = False
 
                 if self.teclado.key_pressed("UP"):
                     self.cim = True
+                    self.virado_cim = True
+                    self.virado_dir = False
+                    self.virado_esq = False
+                    self.virado_bai = False
                     self.mapa[i][j].y += self.velocidade * self.janela.delta_time()
                 else:
                     self.cim = False
 
                 if self.teclado.key_pressed("DOWN"):
                     self.bai = True
+                    self.virado_bai = True
+                    self.virado_dir = False
+                    self.virado_cim = False
+                    self.virado_esq = False
                     self.mapa[i][j].y -= self.velocidade * self.janela.delta_time()
                 else:
                     self.bai = False

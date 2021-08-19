@@ -1,6 +1,7 @@
 import csv
 import hud
 import mapa
+import combate
 from PPlay.sprite import *
 from PPlay.gameimage import *
 from PPlay.keyboard import *
@@ -30,6 +31,16 @@ class Game:
         self.player_esquerda.set_sequence_time(0, 2, 100)
         self.player = self.player_frente
 
+        self.sword_frente = Sprite("assets/jogador/sword_frente.png", False, 0, 4)
+        self.sword_frente.set_sequence_time(0, 3, 250)
+        self.sword_costas = Sprite("assets/jogador/sword_costas.png", False, 0, 4)
+        self.sword_costas.set_sequence_time(0, 3, 250)
+        self.sword_direita = Sprite("assets/jogador/sword_direita.png", False, 0, 4)
+        self.sword_direita.set_sequence_time(0, 3, 250)
+        self.sword_esquerda = Sprite("assets/jogador/sword_esquerda.png", False, 0, 4)
+        self.sword_esquerda.set_sequence_time(0, 3, 250)
+        self.sword = self.sword_frente
+
         self.velocidade = 400
         # self.player.stop()
 
@@ -43,7 +54,15 @@ class Game:
         self.player_direita.x = self.janela.width/2 - self.player.width
         self.player_direita.y = self.janela.height/2 - self.player.height
 
+        # combate
+        self.combate = combate.Combate(janela, self.player)
+
         self.mapa.carrega_mapa()
+
+        # framerate
+        self.fps = 0
+        self.frames = 0
+        self.relogio = 0
 
     def game_loop(self):
         while True:
@@ -73,15 +92,28 @@ class Game:
             self.mapa.desenha_layer(1)
 
             self.player.draw()
-            # if self.player.is_playing():
-            #     if self.mapa.bai:
-            #         self.player.update()
-            #     if self.mapa.cim:
-            #         self.player.update()
+
+            # carrega direcoes do player
+            self.combate.atack(self.mapa.virado_cim, self.mapa.virado_bai, self.mapa.virado_esq, self.mapa.virado_dir, False)
+
+            if self.teclado.key_pressed("SPACE"):
+                for i in range(4):
+                    self.combate.atack(self.mapa.cim, self.mapa.bai, self.mapa.esq, self.mapa.dir, True)
+                    self.combate.desenha_ataque()
 
             self.mapa.desenha_layer(2)
 
             # desenha H.U.D.
             self.hud.draw_hud()
+
+            # framerate
+            if self.relogio >= 1:
+                self.relogio = 0
+                self.fps = self.frames
+                self.frames = 0
+
+            self.janela.draw_text("fps: {}".format(self.fps), 50, 10, 30, (255, 255, 255))
+            self.relogio += self.janela.delta_time()
+            self.frames += 1
 
             self.janela.update()
