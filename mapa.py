@@ -13,8 +13,6 @@ class Mapa:
         self.ficheiro = open('maps/mapa_cela_teste.csv')
         self.reader = csv.reader(self.ficheiro)
         self.mapa = []
-        self.mapaBaixo = []
-        self.floor = []
         self.chao = self
         self.parede = self
 
