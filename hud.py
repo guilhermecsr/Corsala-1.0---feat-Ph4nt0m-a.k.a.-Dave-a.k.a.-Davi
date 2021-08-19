@@ -1,7 +1,7 @@
 from PPlay.sprite import *
 
 
-class Hud():
+class Hud:
     def __init__(self, janela, hp=1, slots=3):
         self.janela = janela
 
