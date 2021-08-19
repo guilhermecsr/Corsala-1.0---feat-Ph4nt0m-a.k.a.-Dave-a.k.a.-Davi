@@ -47,7 +47,7 @@ class Animation(gameimage.GameImage):
 
         self.set_sequence(0, self.total_frames, self.loop)
 
-        
+
     #-----------------------SEQUENCE SETTERS-----------------
     """
     Sets some aspects of the sequence, init/final frame, loop..
@@ -78,7 +78,6 @@ class Animation(gameimage.GameImage):
     def update(self):
         if(self.playing):
             time_ms = int(round(time.time() * 1000)) #gets the curr time in ms
-            print(self.curr_frame, self.frame_duration)
             if((time_ms - self.last_time > self.frame_duration[self.curr_frame])
                and (self.final_frame != 0)):
                 self.curr_frame += 1
@@ -89,7 +88,7 @@ class Animation(gameimage.GameImage):
                 if((not self.loop) and (self.curr_frame + 1 >= self.final_frame)):
                     self.curr_frame = self.final_frame - 1
                     self.playing = False
-            
+
     """Draws the current frame on the screen."""
     def draw(self):
         if(self.drawable):
@@ -105,8 +104,8 @@ class Animation(gameimage.GameImage):
 
             # Blits the image with the rect and clip_rect clipped
             window.Window.get_screen().blit(self.image, self.rect, area=clip_rect)
-        
-    
+
+
     #----------------------PLAYING CONTROL METHODS----------------------
     """Stops execution and puts the initial frame as the current frame."""
     def stop(self):
@@ -120,7 +119,7 @@ class Animation(gameimage.GameImage):
     """Method responsible fo pausing the Animation."""
     def pause(self):
         self.playing = False
-        
+
     """Returns true if the Animation is being executed."""
     def is_playing(self):
         return self.playing
@@ -141,11 +140,11 @@ class Animation(gameimage.GameImage):
     def unhide(self):
         self.drawable = True
 
-    #----------------GETTER&SETTER METHODS----------------       
+    #----------------GETTER&SETTER METHODS----------------
     """Gets the total duration - sum of all time frames."""
     def get_total_duration(self):
         return self.total_duration
-    
+
     """Sets the initial frame of the sequence of frames."""
     def set_initial_frame(self, frame):
         self.initial_frame = frame
@@ -169,4 +168,3 @@ class Animation(gameimage.GameImage):
     """Gets the current frame that will be drawn."""
     def get_curr_frame(self):
         return self.curr_frame
-    
