@@ -13,11 +13,12 @@ class Menu:
         self.mapa = Mapa(self.janela)
         self.mouse = Mouse()
         self.mouse.hide()
+        self.counter = 0
 
         # assets
         self.fundo = GameImage("assets/fundo_menu.png")
-        self.button = Sprite("assets/invaders_assets/button_1.jpg")
-        self.button_start = Sprite("assets/invaders_assets/start_button_1.jpg")
+        self.button = Sprite("assets/Start_button1.png")
+        self.button_start = Sprite("assets/Start_button1.png")
         self.button_exit = Sprite("assets/invaders_assets/sair_button_1.jpg")
         self.cursor = Sprite("assets/dwarven_gauntlet.png")
 
@@ -39,12 +40,26 @@ class Menu:
             # cliques
             if self.mouse.is_over_object(self.button_exit) and self.mouse.is_button_pressed(1):
                 break
+
+            self.button_start = Sprite("assets/Start_button1.png")
+            self.button_start.x = self.janela.width / 2 - self.button.width / 2
+            self.button_start.y = self.janela.height / 2 - self.button.height / 2
+
+            if self.mouse.is_over_object(self.button_start):
+                self.button_start = Sprite("assets/Start_button3.png")
+                self.button_start.x = self.janela.width / 2 - self.button.width / 2
+                self.button_start.y = self.janela.height / 2 - self.button.height / 2
+
             if self.mouse.is_over_object(self.button_start) and self.mouse.is_button_pressed(1):
                 # self.mapa.carrega_mapa()
                 self.game.game_loop()
+
+
 
             self.fundo.draw()
             self.button_start.draw()
             self.button_exit.draw()
             self.cursor.draw()
+            self.janela.draw_text(f'pos : {self.mouse.get_position()}', 15, 15, size=20, color=(100, 100, 0))
             self.janela.update()
+
