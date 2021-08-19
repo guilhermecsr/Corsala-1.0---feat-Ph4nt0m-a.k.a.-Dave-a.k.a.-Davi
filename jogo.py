@@ -19,12 +19,13 @@ class Game:
         # gameimages
         self.fundo = GameImage("assets/fundo_preto.png")
 
-        # sprites
+        # player
         self.player = Sprite("assets/player_frente.png", True, 0, 4)
+        self.velocidade = 400
         # self.player.stop()
         # self.player.play()
 
-        # posições
+        # posição relativa a tela
         self.player.x = self.janela.width/2 - self.player.width
         self.player.y = self.janela.height/2 - self.player.height
 
@@ -35,7 +36,7 @@ class Game:
             if self.teclado.key_pressed("ESC"):
                 break
 
-            self.mapa.move_player(self.player)
+            self.mapa.move_player(self.player, self.velocidade)
 
             self.fundo.draw()
 
