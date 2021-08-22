@@ -16,7 +16,7 @@ class Inimigos:
         self.soldado_esquerda = Sprite("assets/mobs/soldado_esquerda.png", False, 0, 3)
         self.soldado = self.soldado_frente
 
-        self.coordenadas = [[29, 23]]
+        self.coordenadas = [[18, 18]]
         self.a = 0
         self.b = 0
 
@@ -24,7 +24,6 @@ class Inimigos:
 
     def visao(self):
         if 0 < self.soldado.x < self.janela.width and 0 < self.soldado.y < self.janela.height:
-            print("to te venu")
             return True
         return False
 
