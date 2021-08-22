@@ -10,7 +10,7 @@ class Menu:
         self.janela = janela
         self.fundo = fundo
         self.game = Game(self.janela)
-        self.mapa = Mapa(self.janela)
+        self.mapa = Mapa(self.janela, False)
         self.mouse = Mouse()
         self.mouse.hide()
         self.counter = 0

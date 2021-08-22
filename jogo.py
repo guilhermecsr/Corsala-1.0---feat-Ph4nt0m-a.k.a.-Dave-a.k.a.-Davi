@@ -2,6 +2,7 @@ import csv
 import hud
 import mapa
 import combate
+import inimigos
 from PPlay.sprite import *
 from PPlay.gameimage import *
 from PPlay.keyboard import *
@@ -15,7 +16,7 @@ class Game:
         self.hud = hud.Hud(self.janela)
 
         # carrega o mapa
-        self.mapa = mapa.Mapa(self.janela)
+        self.mapa = mapa.Mapa(self.janela, inimigos)
 
         # gameimages
         self.fundo = GameImage("assets/fundo_preto.png")
@@ -57,7 +58,10 @@ class Game:
         # combate
         self.combate = combate.Combate(janela, self.player)
 
+        self.inimigos = inimigos.Inimigos(janela, self.player, self.mapa)
+
         self.mapa.carrega_mapa()
+        self.inimigos.cria_mobs()
 
         # framerate
         self.fps = 0
@@ -91,7 +95,11 @@ class Game:
 
             self.mapa.desenha_layer(1)
 
+            self.inimigos.movimenta_mobs()
+
             self.player.draw()
+
+            self.inimigos.desenha_inimigos()
 
             # carrega direcoes do player
             self.combate.atack(self.mapa.virado_cim, self.mapa.virado_bai, self.mapa.virado_esq, self.mapa.virado_dir, False)

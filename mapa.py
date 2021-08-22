@@ -5,13 +5,15 @@ from PPlay.keyboard import *
 
 
 class Mapa:
-    def __init__(self, janela):
+    def __init__(self, janela, inimigos):
         self.janela = janela
         self.teclado = Keyboard()
+        self.inimigos = inimigos
 
         # carrega o mapa
         self.ficheiro = open('maps/mapa_cela_teste.csv')
         self.reader = csv.reader(self.ficheiro)
+        self.aviso_de_comandos = Sprite("assets/aviso_de_comandos.png", False, 1)
         self.mapa = []
         self.chao = self
         self.parede = self
@@ -91,6 +93,11 @@ class Mapa:
             for j in range(len(self.mapa[i])):
                 if self.mapa[i][j].layer == layer:
                     self.mapa[i][j].draw()
+                    # self.janela.draw_text("({}, {})".format(i, j),
+                    #                       self.mapa[i][j].x + 10,
+                    #                       self.mapa[i][j].y,
+                    #                       12,
+                    #                       (255, 255, 255))
 
     def carrega_mapa(self):
         for linha in self.reader:
@@ -103,7 +110,7 @@ class Mapa:
                 self.bueiro_s_agua = Sprite("assets/96x96/bueiro_s_agua.png", False, 1)
                 self.vazio = Sprite("assets/96x96/void.png", False, 0)
                 self.chao1 = Sprite("assets/96x96/chao1.png", False, 1)
-                self.chao2 = Sprite("assets/96x96/chao2.png", False, 1)
+                self.chao2 = Sprite("assets/96x96/chao2.png", False, 0)
                 self.chao3 = Sprite("assets/96x96/chao3.png", False, 1)
                 self.chao4 = Sprite("assets/96x96/chao4.png", False, 1)
                 self.chao5 = Sprite("assets/96x96/chao5.png", False, 1)
@@ -113,5 +120,5 @@ class Mapa:
 
                 self.mapa[i][j] = eval("self.{}".format(self.mapa[i][j]))
 
-                self.mapa[i][j].x = j * self.mapa[i][j].width - (15*96 - self.janela.width/2)
-                self.mapa[i][j].y = i * self.mapa[i][j].height - (34*96 - self.janela.height/2)
+                self.mapa[i][j].x = j * 96 - (15*96 - self.janela.width/2)
+                self.mapa[i][j].y = i * 96 - (34*96 - self.janela.height/2)

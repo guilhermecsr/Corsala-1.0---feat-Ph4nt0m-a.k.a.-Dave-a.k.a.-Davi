@@ -8,7 +8,7 @@ class Combate:
     def __init__(self, janela, player):
         self.janela = janela
         self.player = player
-        self.mapa = mapa.Mapa(self.janela)
+        self.mapa = mapa.Mapa(self.janela, False)
 
         self.sword_frente = Sprite("assets/jogador/sword_frente.png", False, 0, 4)
         self.sword_frente.set_sequence_time(0, 3, 250)
