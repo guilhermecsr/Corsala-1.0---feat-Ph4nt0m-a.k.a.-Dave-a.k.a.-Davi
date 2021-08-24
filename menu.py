@@ -19,18 +19,20 @@ class Menu:
         self.fundo = GameImage("assets/fundo_menu.png")
         self.button = Sprite("assets/Start_button1.png")
         self.button_start = Sprite("assets/Start_button1.png")
-        self.button_exit = Sprite("assets/invaders_assets/sair_button_1.jpg")
+        self.button_exit = Sprite("assets/Exit_button1.png")
         self.cursor = Sprite("assets/dwarven_gauntlet.png")
+        self.fundo_menu = GameImage("assets/fundo_menu_corsala.jpg")
+
 
         # assets position
-        menu_x = janela.width / 2 - self.button.width / 2
-        menu_y = janela.height / 2 - self.button.height / 2
+        self.menu_x = janela.width / 2 - self.button.width / 2
+        self.menu_y = janela.height / 2 - self.button.height / 2
 
-        self.button_start.x = menu_x
-        self.button_start.y = menu_y
+        self.button_start.x = self.menu_x
+        self.button_start.y = self.menu_y
 
-        self.button_exit.x = menu_x
-        self.button_exit.y = menu_y + self.button.height + 25
+        self.button_exit.x = self.menu_x
+        self.button_exit.y = self.menu_y + self.button.height + 25
 
     def menu_loop(self):
         while True:
@@ -41,12 +43,18 @@ class Menu:
             if self.mouse.is_over_object(self.button_exit) and self.mouse.is_button_pressed(1):
                 break
 
-            self.button_start = Sprite("assets/Start_button1.png")
+            self.button_start = Sprite("assets/start_button.png", False, 0, 2)
+            self.button_start.set_sequence(0, 1)
             self.button_start.x = self.janela.width / 2 - self.button.width / 2
             self.button_start.y = self.janela.height / 2 - self.button.height / 2
 
+            self.button_exit = Sprite("assets/exit_button.png", False, 0, 2)
+            self.button_exit.set_sequence(0, 1)
+            self.button_exit.x = self.menu_x
+            self.button_exit.y = self.menu_y + self.button.height + 25
+
             if self.mouse.is_over_object(self.button_start):
-                self.button_start = Sprite("assets/Start_button3.png")
+                self.button_start.set_curr_frame(1)
                 self.button_start.x = self.janela.width / 2 - self.button.width / 2
                 self.button_start.y = self.janela.height / 2 - self.button.height / 2
 
@@ -54,9 +62,15 @@ class Menu:
                 # self.mapa.carrega_mapa()
                 self.jogo.game_loop()
 
+            if self.mouse.is_over_object(self.button_exit):
+                self.button_exit.set_curr_frame(1)
+                self.button_exit.x = self.menu_x
+                self.button_exit.y = self.menu_y + self.button.height + 25
 
 
-            self.fundo.draw()
+
+
+            self.fundo_menu.draw()
             self.button_start.draw()
             self.button_exit.draw()
             self.cursor.draw()
