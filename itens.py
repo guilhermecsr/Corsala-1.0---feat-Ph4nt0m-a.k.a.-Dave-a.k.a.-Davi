@@ -7,4 +7,4 @@ class Itens:
         self.inventario = open("inventario.txt", "r+w")
 
 
-        print(self.inventario)
+        # print(self.inventario)

@@ -6,11 +6,11 @@ from mapa import *
 
 
 class Menu:
-    def __init__(self, janela, fundo):
+    def __init__(self, janela, fundo, jogo):
         self.janela = janela
         self.fundo = fundo
-        self.game = Game(self.janela)
-        self.mapa = Mapa(self.janela)
+        self.jogo = jogo
+        self.mapa = Mapa(self.janela, False)
         self.mouse = Mouse()
         self.mouse.hide()
         self.counter = 0
@@ -52,7 +52,7 @@ class Menu:
 
             if self.mouse.is_over_object(self.button_start) and self.mouse.is_button_pressed(1):
                 # self.mapa.carrega_mapa()
-                self.game.game_loop()
+                self.jogo.game_loop()
 
 
 
