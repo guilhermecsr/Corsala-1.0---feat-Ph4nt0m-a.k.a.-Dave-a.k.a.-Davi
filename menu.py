@@ -16,13 +16,10 @@ class Menu:
         self.counter = 0
 
         # assets
-        self.fundo = GameImage("assets/fundo_menu.png")
         self.button = Sprite("assets/Start_button1.png")
         self.button_start = Sprite("assets/Start_button1.png")
         self.button_exit = Sprite("assets/Exit_button1.png")
         self.cursor = Sprite("assets/dwarven_gauntlet.png")
-        self.fundo_menu = GameImage("assets/fundo_menu_corsala.jpg")
-
 
         # assets position
         self.menu_x = janela.width / 2 - self.button.width / 2
@@ -55,25 +52,16 @@ class Menu:
 
             if self.mouse.is_over_object(self.button_start):
                 self.button_start.set_curr_frame(1)
-                self.button_start.x = self.janela.width / 2 - self.button.width / 2
-                self.button_start.y = self.janela.height / 2 - self.button.height / 2
 
             if self.mouse.is_over_object(self.button_start) and self.mouse.is_button_pressed(1):
-                # self.mapa.carrega_mapa()
                 self.jogo.game_loop()
 
             if self.mouse.is_over_object(self.button_exit):
                 self.button_exit.set_curr_frame(1)
-                self.button_exit.x = self.menu_x
-                self.button_exit.y = self.menu_y + self.button.height + 25
 
-
-
-
-            self.fundo_menu.draw()
+            self.fundo.draw()
             self.button_start.draw()
             self.button_exit.draw()
             self.cursor.draw()
             self.janela.draw_text(f'pos : {self.mouse.get_position()}', 15, 15, size=20, color=(100, 100, 0))
             self.janela.update()
-
