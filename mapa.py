@@ -128,6 +128,7 @@ class Mapa:
                     #                       12,
                     #                       (255, 255, 255))
 
+    # rever a volta da escada
     def carrega_mapa(self, reader=csv.reader(open('maps/0.csv')), posix=17, posiy=11):
         self.mapa.clear()
         self.loading = 0
