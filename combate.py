@@ -1,7 +1,9 @@
+import inimigos
 from PPlay.sprite import *
 from PPlay.gameimage import *
 from PPlay.keyboard import *
-import mapa
+from mapa import *
+from inimigos import *
 
 
 class Combate:
@@ -9,6 +11,7 @@ class Combate:
         self.janela = janela
         self.player = player
         self.mapa = mapa.Mapa(self.janela, False)
+        self.inimigos = inimigos.Inimigos(self.janela, self.player, self.mapa)
 
         self.sword_frente = Sprite("assets/jogador/sword_frente.png", False, 0, 4)
         self.sword_frente.set_sequence_time(0, 3, 250)
@@ -18,7 +21,6 @@ class Combate:
         self.sword_direita.set_sequence_time(0, 3, 250)
         self.sword_esquerda = Sprite("assets/jogador/sword_esquerda.png", False, 0, 4)
         self.sword_esquerda.set_sequence_time(0, 3, 250)
-        print(self.player.x)
         self.sword = self.sword_frente
         self.sword.x = self.player.x - self.player.width / 2
         self.sword.y = self.player.y + self.player.height

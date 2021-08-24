@@ -1,12 +1,15 @@
-from PPlay.sprite import *
 import jogo
+from PPlay.sprite import *
+import hud
+from jogo import *
 
 
 class Inimigos:
     def __init__(self, janela, player, mapa):
         self.janela = janela
-        self.player = player
         self.jogo = jogo
+        self.player = player
+        self.hud = hud
         self.mobs = []
 
         self.mapa = mapa
@@ -19,6 +22,8 @@ class Inimigos:
         self.coordenadas = [[18, 18]]
         self.a = 0
         self.b = 0
+
+        self.cooldown = 0
 
         # self.coordenada_y = []
 
@@ -52,6 +57,17 @@ class Inimigos:
                 if self.mobs[i].y + self.mobs[i].height/2 > self.player.y + self.player.height:
                     self.b -= 200 * self.janela.delta_time()
 
+    def dano(self, player_hp):
+        self.cooldown += self.janela.delta_time()
+        for i in range(len(self.mobs)):
+            if self.janela.width/2 - 100 < self.mobs[i].\
+                    x < self.janela.width/2 + 100 and self.janela.height/2 - 100 < self.mobs[i].\
+                    y < self.janela.height/2 + 100 and self.cooldown >= 1:
+                if self.mobs[i].collided(self.player) and player_hp > 0:
+                    player_hp -= 1
+                    self.cooldown = 0
+                    self.hud.hp = player_hp
+        return player_hp
 
     def desenha_inimigos(self):
         for i in range(len(self.mobs)):
