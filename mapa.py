@@ -1,16 +1,18 @@
 import csv
+
+import inimigos
 from PPlay.sprite import *
 from PPlay.gameimage import *
 from PPlay.keyboard import *
 from os import listdir
 from os.path import isfile, join
-
+from inimigos import *
 
 class Mapa:
-    def __init__(self, janela, inimigos):
+    def __init__(self, janela):
         self.janela = janela
         self.teclado = Keyboard()
-        self.inimigos = inimigos
+        self.inimigos = inimigos.Inimigos
 
         # carrega o mapa
         self.zero = open('maps/0.csv')
@@ -169,3 +171,4 @@ class Mapa:
 
                 self.mapa[i][j].x = j * 96 - (posiy * 96 - self.janela.width/2)
                 self.mapa[i][j].y = i * 96 - (posix * 96 - self.janela.height/2)
+        return self.mapa

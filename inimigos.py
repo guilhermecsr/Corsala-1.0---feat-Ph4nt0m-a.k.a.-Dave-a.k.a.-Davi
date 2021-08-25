@@ -1,49 +1,48 @@
 import jogo
+import mapa
 from PPlay.sprite import *
 import hud
-from jogo import *
+# from jogo import *
+from mapa import *
 
 
 class Inimigos:
-    def __init__(self, janela, player, mapa):
+    def __init__(self, janela, jogo, player):
         self.janela = janela
         self.jogo = jogo
-        self.player = player
         self.hud = hud
         self.mobs = []
+        self.mapa = mapa.Mapa
+        self.player = player
 
-        self.mapa = mapa
         self.soldado_frente = Sprite("assets/mobs/soldado_frente.png", False, 0, 3)
         self.soldado_costas = Sprite("assets/mobs/soldado_costas.png", False, 0, 3)
         self.soldado_direita = Sprite("assets/mobs/soldado_direita.png", False, 0, 3)
         self.soldado_esquerda = Sprite("assets/mobs/soldado_esquerda.png", False, 0, 3)
         self.soldado = self.soldado_frente
 
-        self.coordenadas = [[18, 18]]
+        self.coordenadas = [[15, 15]]
         self.a = 0
         self.b = 0
 
         self.cooldown = 0
-
-        # self.coordenada_y = []
 
     def visao(self):
         if 0 < self.soldado.x < self.janela.width and 0 < self.soldado.y < self.janela.height:
             return True
         return False
 
-    def cria_mobs(self):
+    def cria_mobs(self, mapa):
         self.soldado = Sprite("assets/mobs/soldado_frente.png", False, 0, 3)
         for i in self.coordenadas:
-            self.soldado.x = self.mapa.mapa[i[0]][i[1]].x
-            self.soldado.y = self.mapa.mapa[i[0]][i[1]].y
+            self.soldado.x = mapa[i[0]][i[1]].x
+            self.soldado.y = mapa[i[0]][i[1]].y
             self.mobs.append(self.soldado)
 
-
-    def movimenta_mobs(self):
+    def movimenta_mobs(self, mapa):
         for i in range(len(self.mobs)):
-            self.mobs[i].x = self.mapa.mapa[self.coordenadas[i][0]][self.coordenadas[i][1]].x + self.a
-            self.mobs[i].y = self.mapa.mapa[self.coordenadas[i][0]][self.coordenadas[i][1]].y + self.b
+            self.mobs[i].x = mapa[self.coordenadas[i][0]][self.coordenadas[i][1]].x + self.a
+            self.mobs[i].y = mapa[self.coordenadas[i][0]][self.coordenadas[i][1]].y + self.b
             if self.visao():
                 if self.mobs[i].x + self.mobs[i].width/2 < self.player.x:
                     self.a += 200 * self.janela.delta_time()

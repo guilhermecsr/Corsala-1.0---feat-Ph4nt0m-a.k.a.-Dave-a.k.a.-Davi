@@ -1,16 +1,9 @@
-import csv
-import hud
-import mapa
 import combate
-import inimigos
-from PPlay.sprite import *
-from PPlay.gameimage import *
-from PPlay.keyboard import *
-from PPlay.animation import *
+from inimigos import *
 
 
 class Game:
-    def __init__(self, janela, mapa, player, inimigos):
+    def __init__(self, janela, mapa, player):
         self.janela = janela
         self.teclado = Keyboard()
         self.player = player
@@ -24,14 +17,14 @@ class Game:
         # combate
         self.combate = combate.Combate(janela, self.player.player)
 
-        self.inimigos = inimigos
+        self.inimigos = inimigos.Inimigos(janela, Game, self.player.player)
 
         # atributos
         self.player_hp = 10
         self.hud = hud
 
-        self.mapa.carrega_mapa()
-        # self.inimigos.Inimigos.cria_mobs()
+        self.mapa_grid = self.mapa.carrega_mapa()
+        self.inimigos.cria_mobs(self.mapa_grid)
 
         # framerate
         self.fps = 0
@@ -53,7 +46,7 @@ class Game:
 
             self.mapa.desenha_layer(1)
 
-            self.inimigos.movimenta_mobs()
+            self.inimigos.movimenta_mobs(self.mapa_grid)
             self.player_hp = self.inimigos.dano(self.player_hp)
 
             self.player.player.draw()

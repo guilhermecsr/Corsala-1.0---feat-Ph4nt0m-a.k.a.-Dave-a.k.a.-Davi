@@ -1,8 +1,3 @@
-import inimigos
-from PPlay.sprite import *
-from PPlay.gameimage import *
-from PPlay.keyboard import *
-from mapa import *
 from inimigos import *
 
 
@@ -10,8 +5,8 @@ class Combate:
     def __init__(self, janela, player):
         self.janela = janela
         self.player = player
-        self.mapa = mapa.Mapa(self.janela, False)
-        self.inimigos = inimigos.Inimigos(self.janela, self.player, self.mapa)
+        # self.mapa = mapa.Mapa(self.janela, False)
+        # self.inimigos = inimigos  # (self.janela, self.player)
 
         self.sword_frente = Sprite("assets/jogador/sword_frente.png", False, 0, 4)
         self.sword_frente.set_sequence_time(0, 3, 250)

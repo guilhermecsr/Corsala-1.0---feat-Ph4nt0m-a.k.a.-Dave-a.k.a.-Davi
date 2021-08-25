@@ -13,10 +13,10 @@ janela = Window(1600, 900)
 janela.set_title("Campanhas de Corsala")
 fundo = GameImage("assets/fundo_menu_corsala.jpg")
 
-mapa = Mapa(janela, inimigos)
+mapa = Mapa(janela)
 player = Player(janela)
-inimigos = Inimigos(janela, player, mapa)
-jogo = Game(janela, mapa, player, inimigos)
+jogo = Game(janela, mapa, player)
+inimigos = Inimigos(janela, jogo, player)
 hud = Hud(janela, jogo.player_hp)
 
 menu = Menu(janela, fundo, jogo)
