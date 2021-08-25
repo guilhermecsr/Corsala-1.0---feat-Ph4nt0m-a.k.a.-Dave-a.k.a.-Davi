@@ -17,6 +17,7 @@ mapa = Mapa(janela)
 player = Player(janela)
 jogo = Game(janela, mapa, player)
 inimigos = Inimigos(janela, jogo, player)
+combate = Combate(janela, player)
 hud = Hud(janela, jogo.player_hp)
 
 menu = Menu(janela, fundo, jogo)

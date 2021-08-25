@@ -9,13 +9,13 @@ class Game:
         self.player = player
 
         # carrega o mapa
-        self.mapa = mapa  # .Mapa(self.janela, inimigos)
+        self.mapa = mapa
 
         # gameimages
         self.fundo = GameImage("assets/fundo_preto.png")
 
         # combate
-        self.combate = combate.Combate(janela, self.player.player)
+        self.combate = combate.Combate(janela, self.player)
 
         self.inimigos = inimigos.Inimigos(janela, Game, self.player.player)
 
@@ -24,7 +24,9 @@ class Game:
         self.hud = hud
 
         self.mapa_grid = self.mapa.carrega_mapa()
-        self.inimigos.cria_mobs(self.mapa_grid)
+        self.mobs = self.inimigos.cria_mobs(self.mapa_grid)
+
+        self.cooldown_player = 0
 
         # framerate
         self.fps = 0
@@ -46,7 +48,7 @@ class Game:
 
             self.mapa.desenha_layer(1)
 
-            self.inimigos.movimenta_mobs(self.mapa_grid)
+            self.inimigos.movimenta_mobs(self.mapa_grid, False)
             self.player_hp = self.inimigos.dano(self.player_hp)
 
             self.player.player.draw()
@@ -56,16 +58,18 @@ class Game:
             # carrega direcoes do player
             self.combate.atack(self.mapa.virado_cim, self.mapa.virado_bai, self.mapa.virado_esq, self.mapa.virado_dir, False)
 
+            # ataque do player
+            self.cooldown_player += self.janela.delta_time()
             if self.teclado.key_pressed("SPACE"):
-                for i in range(4):
-                    self.combate.atack(self.mapa.cim, self.mapa.bai, self.mapa.esq, self.mapa.dir, True)
-                    self.combate.desenha_ataque()
+                self.combate.atack(self.mapa.cim, self.mapa.bai, self.mapa.esq, self.mapa.dir, True)
+                if self.combate.acerto(self.mobs, self.cooldown_player):
+                    self.inimigos.movimenta_mobs(self.mapa_grid, True)
+                    self.cooldown_player = 0
 
             self.mapa.desenha_layer(2)
 
             # desenha H.U.D.
             self.hud.Hud(self.janela, self.player_hp)
-            # self.hud.draw_hud()
 
             # framerate
             if self.relogio >= 1:
