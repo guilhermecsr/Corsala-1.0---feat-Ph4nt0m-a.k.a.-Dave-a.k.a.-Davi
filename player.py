@@ -1,11 +1,15 @@
+import inimigos
 from PPlay.sprite import *
 from PPlay.keyboard import *
+from PPlay.gameimage import *
+import sys
 
 
 class Player:
     def __init__(self, janela):
         self.janela = janela
         self.teclado = Keyboard()
+        self.game_over = GameImage("assets/game_over.png")
 
         # player
         self.player_frente = Sprite("assets/jogador/player_frente.png", True, 0, 3)
@@ -41,14 +45,8 @@ class Player:
         self.player_direita.x = self.janela.width / 2 - self.player.width
         self.player_direita.y = self.janela.height / 2 - self.player.height
 
-        # combate
-        # self.combate = combate.Combate(janela, self.player)
-        #
-        # self.inimigos = inimigos.Inimigos(janela, self.player, self.mapa)
-
         # atributos
         self.player_hp = 10
-        # self.hud = hud
 
     def move_player(self):
         if self.teclado.key_pressed("UP"):
@@ -64,3 +62,15 @@ class Player:
             self.player = self.player_direita
             self.player.update()
         self.player.play()
+
+    def mata_player(self, mobs, hp):
+        if hp <= 0:
+            self.fim(mobs)
+
+    def fim(self, mobs):
+        mobs.clear()
+        while True:
+            self.game_over.draw()
+            if self.teclado.key_pressed("ESC"):
+                sys.exit()
+            self.janela.update()

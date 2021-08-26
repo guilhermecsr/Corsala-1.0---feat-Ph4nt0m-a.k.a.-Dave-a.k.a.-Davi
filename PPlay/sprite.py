@@ -17,12 +17,13 @@ class Sprite(animation.Animation):
     Caso seja dado apenas o nome da imagem, será criada uma Animation
     com 1 frame apenas.
     """
-    def __init__(self, image_file, solido=False, layer=0, frames=1, info=''):
+    def __init__(self, image_file, solido=False, layer=0, frames=1, info='', hp=1):
         # Parent's constructor must be first-called
         animation.Animation.__init__(self, image_file, frames)
         self.solido = solido
         self.layer = layer
         self.info = info
+        self.health = hp
 
     """Permite a movimentação com o teclado no eixo X"""
     def move_key_x(self, speed):

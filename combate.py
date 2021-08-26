@@ -1,17 +1,13 @@
-import inimigos
-from PPlay.sprite import *
-from PPlay.gameimage import *
-from PPlay.keyboard import *
-from mapa import *
 from inimigos import *
+from PPlay.keyboard import *
 
 
 class Combate:
     def __init__(self, janela, player):
         self.janela = janela
-        self.player = player
-        self.mapa = mapa.Mapa(self.janela, False)
-        self.inimigos = inimigos.Inimigos(self.janela, self.player, self.mapa)
+        self.player = player.player
+        self.inimigos = inimigos
+        self.teclado = Keyboard
 
         self.sword_frente = Sprite("assets/jogador/sword_frente.png", False, 0, 4)
         self.sword_frente.set_sequence_time(0, 3, 250)
@@ -24,6 +20,8 @@ class Combate:
         self.sword = self.sword_frente
         self.sword.x = self.player.x - self.player.width / 2
         self.sword.y = self.player.y + self.player.height
+
+        self.cooldown = 0
 
     def atack(self, cima, baixo, esquerda, direita, ataque=False):
         self.cim = cima
@@ -51,8 +49,21 @@ class Combate:
             self.sword.x = self.player.x + self.player.width
             self.sword.y = self.player.y
         self.sword.play()
-
         self.sword.update()
+
+    def acerto(self, mobs, cooldown):
+        self.cooldown = cooldown
+        acerto = False
+        if self.cooldown >= 1:
+            for i in mobs:
+                if self.sword.collided(i):
+                    acerto = True
+                    i.health -= 1
+                    if i.health <= 0:
+                        mobs.remove(i)
+                    break
+        self.sword.draw()
+        return acerto
 
     def desenha_ataque(self):
         self.sword.draw()
