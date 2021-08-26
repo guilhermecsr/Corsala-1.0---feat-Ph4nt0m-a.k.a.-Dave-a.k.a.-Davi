@@ -4,6 +4,7 @@ from PPlay.sprite import *
 import hud
 # from jogo import *
 from mapa import *
+import math
 
 
 class Inimigos:
@@ -25,22 +26,108 @@ class Inimigos:
         self.a = 0
         self.b = 0
 
+        self.visap_mob = 400
+
         self.cooldown = 0
 
     def visao(self):
-        if 0 < self.soldado.x < self.janela.width and 0 < self.soldado.y < self.janela.height:
+        soldado_x = self.soldado.x + self.soldado.width/2
+        soldado_y = self.soldado.y + self.soldado.height/2
+        player_x = self.player.x + self.player.width/2
+        player_y = self.player.y + self.player.height/2
+        dist = (abs(soldado_x - player_x) + abs(soldado_y - player_y))
+        if dist <= self.visap_mob:
+            self.visap_mob = 600
             return True
+        self.visap_mob = 337
         return False
 
-    def cria_mobs(self, mapa):
+    def get_line(self, start, end):
+        # """Bresenham's Line Algorithm
+        # Produces a list of tuples from start and end
+        #
+        # >>> points1 = self.get_line((0, 0), (3, 4))
+        # >>> points2 = self.get_line((3, 4), (0, 0))
+        # >>> assert(set(points1) == set(points2))
+        # >>> print points1
+        # [(0, 0), (1, 1), (1, 2), (2, 3), (3, 4)]
+        # >>> print points2
+        # [(3, 4), (2, 3), (1, 2), (1, 1), (0, 0)]
+        # """
+        # Setup initial conditions
+        x1, y1 = start
+        x2, y2 = end
+        dx = x2 - x1
+        dy = y2 - y1
+
+        # Determine how steep the line is
+        is_steep = abs(dy) > abs(dx)
+
+        # Rotate line
+        if is_steep:
+            x1, y1 = y1, x1
+            x2, y2 = y2, x2
+
+        # Swap start and end points if necessary and store swap state
+        swapped = False
+        if x1 > x2:
+            x1, x2 = x2, x1
+            y1, y2 = y2, y1
+            swapped = True
+
+        # Recalculate differentials
+        dx = x2 - x1
+        dy = y2 - y1
+
+        # Calculate error
+        error = int(dx / 2.0)
+        ystep = 1 if y1 < y2 else -1
+
+        # Iterate over bounding box generating points between start and end
+        y = y1
+        points = []
+        for x in range(x1, x2 + 1):
+            coord = (y, x) if is_steep else (x, y)
+            points.append(coord)
+            error -= abs(dy)
+            if error < 0:
+                y += ystep
+                error += dx
+
+        # Reverse the list if the coordinates were swapped
+        if swapped:
+            points.reverse()
+        return points
+
+    '''the range_ argument represents the maximum shooting distance at which the shooter will start firing.
+        and obstacles is a list of obstacles, shooter and target are both pygame Sprites'''
+
+    def visao_em_linha(self, shooter, target, range_, obstacles):
+        if self.visao():
+            line_of_sight = self.get_line(shooter.rect.center, target.rect.center)
+            self.janela.draw_text(".", shooter.rect.center[0], shooter.rect.center[1])
+            zone = shooter.rect.inflate(range_, range_)
+            obstacles_list = [rectangle.rect for rectangle in obstacles]  # to support indexing
+            obstacles_in_sight = zone.collidelistall(obstacles_list)
+            for x in range(1, len(line_of_sight), 5):
+                for obs_index in obstacles_in_sight:
+                    if obstacles_list[obs_index].collidepoint(line_of_sight[x]):
+                        return False
+            return True
+
+    def cria_mobs(self):
         for i in self.coordenadas:
             self.soldado = Sprite("assets/mobs/soldado_frente.png", False, 0, 3, "monstro", 5)
-            self.soldado.x = mapa[i[0]][i[1]].x
-            self.soldado.y = mapa[i[0]][i[1]].y
             self.mobs.append(self.soldado)
         return self.mobs
 
     def movimenta_mobs(self, mapa, hit=False):
+        obstaculos = []
+        for i in range(len(mapa)):
+            for j in range(len(mapa[i])):
+                if mapa[i][j].solido:
+                    obstaculos.append(mapa[i][j])
+
         for i in range(len(self.mobs)):
             self.mobs[i].x = mapa[self.coordenadas[i][0]][self.coordenadas[i][1]].x + self.a
             self.mobs[i].y = mapa[self.coordenadas[i][0]][self.coordenadas[i][1]].y + self.b
@@ -48,7 +135,7 @@ class Inimigos:
                 h = -10
             else:
                 h = 1
-            if self.visao():
+            if self.visao_em_linha(self.player, self.mobs[i], 500, obstaculos):
                 if self.mobs[i].x + self.mobs[i].width/2 < self.player.x:
                     self.a += 200 * self.janela.delta_time() * h
 

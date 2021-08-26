@@ -24,7 +24,7 @@ class Game:
         self.hud = hud
 
         self.mapa_grid = self.mapa.carrega_mapa()
-        self.mobs = self.inimigos.cria_mobs(self.mapa_grid)
+        self.mobs = self.inimigos.cria_mobs()
 
         self.cooldown_player = 0
 
@@ -65,6 +65,7 @@ class Game:
                 if self.combate.acerto(self.mobs, self.cooldown_player):
                     self.inimigos.movimenta_mobs(self.mapa_grid, True)
                     self.cooldown_player = 0
+            self.player.mata_player(self.mobs, self.player_hp)
 
             self.mapa.desenha_layer(2)
 
