@@ -1,5 +1,4 @@
 import csv
-
 import inimigos
 from PPlay.sprite import *
 from PPlay.gameimage import *

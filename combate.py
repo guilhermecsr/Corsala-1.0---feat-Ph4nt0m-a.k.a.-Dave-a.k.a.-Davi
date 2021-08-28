@@ -51,16 +51,17 @@ class Combate:
         self.sword.play()
         self.sword.update()
 
-    def acerto(self, mobs, cooldown):
+    def acerto(self, mobs, cooldown, coordenadas):
         self.cooldown = cooldown
         acerto = False
         if self.cooldown >= 1:
-            for i in mobs:
-                if self.sword.collided(i):
+            for i in range(len(mobs)):
+                if self.sword.collided(mobs[i]):
                     acerto = True
-                    i.health -= 1
-                    if i.health <= 0:
-                        mobs.remove(i)
+                    mobs[i].health -= 1
+                    if mobs[i].health <= 0:
+                        mobs.pop(i)
+                        coordenadas.pop(i)
                     break
         self.sword.draw()
         return acerto
