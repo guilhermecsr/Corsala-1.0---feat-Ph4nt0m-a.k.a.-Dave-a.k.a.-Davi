@@ -22,7 +22,8 @@ class Inimigos:
         self.soldado_esquerda = Sprite("assets/mobs/soldado_esquerda.png", False, 0, 3)
         self.soldado = self.soldado_frente
 
-        self.coordenadas = [[15, 15]]
+        self.coordenadas = [[15, 15], [3, 3], [3, 5]]
+        self.ref = []
         self.a = 0
         self.b = 0
 
@@ -30,17 +31,8 @@ class Inimigos:
 
         self.cooldown = 0
 
-    def visao(self):
-        soldado_x = self.soldado.x + self.soldado.width/2
-        soldado_y = self.soldado.y + self.soldado.height/2
-        player_x = self.player.x + self.player.width/2
-        player_y = self.player.y + self.player.height/2
-        dist = (abs(soldado_x - player_x) + abs(soldado_y - player_y))
-        if dist <= self.visap_mob:
-            self.visap_mob = 600
-            return True
-        self.visap_mob = 337
-        return False
+    def coordenadas_mobs(self):
+        return self.coordenadas
 
     def get_line(self, start, end):
         # """Bresenham's Line Algorithm
@@ -99,13 +91,24 @@ class Inimigos:
             points.reverse()
         return points
 
+    def visao(self, i):
+        soldado_x = self.mobs[i].x + self.mobs[i].width/2
+        soldado_y = self.mobs[i].y + self.mobs[i].height/2
+        player_x = self.player.x + self.player.width/2
+        player_y = self.player.y + self.player.height/2
+        dist = (abs(soldado_x - player_x) + abs(soldado_y - player_y))
+        if dist <= self.visap_mob:
+            self.visap_mob = 800
+            return True
+        self.visap_mob = 400
+        return False
+
     '''the range_ argument represents the maximum shooting distance at which the shooter will start firing.
         and obstacles is a list of obstacles, shooter and target are both pygame Sprites'''
 
-    def visao_em_linha(self, shooter, target, range_, obstacles):
-        if self.visao():
+    def visao_em_linha(self, shooter, target, range_, obstacles, i):
+        if self.visao(i):
             line_of_sight = self.get_line(shooter.rect.center, target.rect.center)
-            self.janela.draw_text(".", shooter.rect.center[0], shooter.rect.center[1])
             zone = shooter.rect.inflate(range_, range_)
             obstacles_list = [rectangle.rect for rectangle in obstacles]  # to support indexing
             obstacles_in_sight = zone.collidelistall(obstacles_list)
@@ -119,6 +122,7 @@ class Inimigos:
         for i in self.coordenadas:
             self.soldado = Sprite("assets/mobs/soldado_frente.png", False, 0, 3, "monstro", 5)
             self.mobs.append(self.soldado)
+            self.ref.append([self.a, self.b])
         return self.mobs
 
     def movimenta_mobs(self, mapa, hit=False):
@@ -129,24 +133,24 @@ class Inimigos:
                     obstaculos.append(mapa[i][j])
 
         for i in range(len(self.mobs)):
-            self.mobs[i].x = mapa[self.coordenadas[i][0]][self.coordenadas[i][1]].x + self.a
-            self.mobs[i].y = mapa[self.coordenadas[i][0]][self.coordenadas[i][1]].y + self.b
             if hit:
                 h = -10
             else:
                 h = 1
-            if self.visao_em_linha(self.player, self.mobs[i], 500, obstaculos):
+            if self.visao_em_linha(self.player, self.mobs[i], 800, obstaculos, i):
                 if self.mobs[i].x + self.mobs[i].width/2 < self.player.x:
-                    self.a += 200 * self.janela.delta_time() * h
+                    self.ref[i][0] += 200 * self.janela.delta_time() * h
 
-                if self.mobs[i].x + self.mobs[i].width/2 > self.player.x + self.player.width:
-                    self.a -= 200 * self.janela.delta_time() * h
+                elif self.mobs[i].x + self.mobs[i].width/2 > self.player.x + self.player.width:
+                    self.ref[i][0] -= 200 * self.janela.delta_time() * h
 
-                if self.mobs[i].y + self.mobs[i].height/2 < self.player.y:
-                    self.b += 200 * self.janela.delta_time() * h
+                elif self.mobs[i].y + self.mobs[i].height/2 < self.player.y:
+                    self.ref[i][1] += 200 * self.janela.delta_time() * h
 
-                if self.mobs[i].y + self.mobs[i].height/2 > self.player.y + self.player.height:
-                    self.b -= 200 * self.janela.delta_time() * h
+                elif self.mobs[i].y + self.mobs[i].height/2 > self.player.y + self.player.height:
+                    self.ref[i][1] -= 200 * self.janela.delta_time() * h
+            self.mobs[i].x = mapa[self.coordenadas[i][0]][self.coordenadas[i][1]].x + self.ref[i][0]
+            self.mobs[i].y = mapa[self.coordenadas[i][0]][self.coordenadas[i][1]].y + self.ref[i][1]
 
     def dano(self, player_hp):
         self.cooldown += self.janela.delta_time()

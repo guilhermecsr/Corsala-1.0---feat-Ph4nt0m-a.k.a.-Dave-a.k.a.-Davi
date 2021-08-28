@@ -25,6 +25,7 @@ class Game:
 
         self.mapa_grid = self.mapa.carrega_mapa()
         self.mobs = self.inimigos.cria_mobs()
+        self.coordenadas_mobs = self.inimigos.coordenadas_mobs()
 
         self.cooldown_player = 0
 
@@ -62,7 +63,7 @@ class Game:
             self.cooldown_player += self.janela.delta_time()
             if self.teclado.key_pressed("SPACE"):
                 self.combate.atack(self.mapa.cim, self.mapa.bai, self.mapa.esq, self.mapa.dir, True)
-                if self.combate.acerto(self.mobs, self.cooldown_player):
+                if self.combate.acerto(self.mobs, self.cooldown_player, self.coordenadas_mobs):
                     self.inimigos.movimenta_mobs(self.mapa_grid, True)
                     self.cooldown_player = 0
             self.player.mata_player(self.mobs, self.player_hp)
