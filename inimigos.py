@@ -32,21 +32,11 @@ class Inimigos:
         self.cooldown = 0
 
     def coordenadas_mobs(self):
+        self.mata_mobs()
         return self.coordenadas
 
     def get_line(self, start, end):
-        # """Bresenham's Line Algorithm
-        # Produces a list of tuples from start and end
-        #
-        # >>> points1 = self.get_line((0, 0), (3, 4))
-        # >>> points2 = self.get_line((3, 4), (0, 0))
-        # >>> assert(set(points1) == set(points2))
-        # >>> print points1
-        # [(0, 0), (1, 1), (1, 2), (2, 3), (3, 4)]
-        # >>> print points2
-        # [(3, 4), (2, 3), (1, 2), (1, 1), (0, 0)]
-        # """
-        # Setup initial conditions
+        # Bresenham's Line Algorithm
         x1, y1 = start
         x2, y2 = end
         dx = x2 - x1
@@ -120,10 +110,16 @@ class Inimigos:
 
     def cria_mobs(self):
         for i in self.coordenadas:
-            self.soldado = Sprite("assets/mobs/soldado_frente.png", False, 0, 3, "monstro", 5)
+            self.soldado = Sprite("assets/mobs/soldado.png", False, 0, 13, "monstro", 5)
+            self.soldado.set_total_duration(4000)
+            self.soldado.play()
             self.mobs.append(self.soldado)
             self.ref.append([self.a, self.b])
         return self.mobs
+
+    def anima_mobs(self):
+
+        pass
 
     def movimenta_mobs(self, mapa, hit=False):
         obstaculos = []
@@ -133,46 +129,67 @@ class Inimigos:
                     obstaculos.append(mapa[i][j])
 
         for i in range(len(self.mobs)):
-            if hit:
-                h = -10
-            else:
-                h = 1
-            if self.visao_em_linha(self.player, self.mobs[i], 800, obstaculos, i):
-                if self.mobs[i].x + self.mobs[i].width/2 < self.player.x:
-                    self.ref[i][0] += 200 * self.janela.delta_time() * h
+            if not self.mobs[i].health <= 0:
+                if hit:
+                    h = -10
+                else:
+                    h = 1
+                if self.visao_em_linha(self.player, self.mobs[i], 800, obstaculos, i):
+                    if self.mobs[i].x + self.mobs[i].width/2 < self.player.x:
+                        self.ref[i][0] += 200 * self.janela.delta_time() * h
+                        self.mobs[i].set_sequence(6, 8)
+                        self.mobs[i].update()
 
-                elif self.mobs[i].x + self.mobs[i].width/2 > self.player.x + self.player.width:
-                    self.ref[i][0] -= 200 * self.janela.delta_time() * h
+                    elif self.mobs[i].x + self.mobs[i].width/2 > self.player.x + self.player.width:
+                        self.ref[i][0] -= 200 * self.janela.delta_time() * h
+                        self.mobs[i].set_sequence(3, 5)
+                        self.mobs[i].update()
 
-                elif self.mobs[i].y + self.mobs[i].height/2 < self.player.y:
-                    self.ref[i][1] += 200 * self.janela.delta_time() * h
+                    elif self.mobs[i].y + self.mobs[i].height/2 < self.player.y:
+                        self.ref[i][1] += 200 * self.janela.delta_time() * h
+                        self.mobs[i].set_sequence(0, 2)
+                        self.mobs[i].update()
 
-                elif self.mobs[i].y + self.mobs[i].height/2 > self.player.y + self.player.height:
-                    self.ref[i][1] -= 200 * self.janela.delta_time() * h
+                    elif self.mobs[i].y + self.mobs[i].height/2 > self.player.y + self.player.height:
+                        self.ref[i][1] -= 200 * self.janela.delta_time() * h
+                        self.mobs[i].set_sequence(9, 11)
+                        self.mobs[i].update()
             self.mobs[i].x = mapa[self.coordenadas[i][0]][self.coordenadas[i][1]].x + self.ref[i][0]
             self.mobs[i].y = mapa[self.coordenadas[i][0]][self.coordenadas[i][1]].y + self.ref[i][1]
 
     def dano(self, player_hp):
         self.cooldown += self.janela.delta_time()
         for i in range(len(self.mobs)):
+
             if self.janela.width/2 - 500 < self.mobs[i].\
                     x < self.janela.width/2 + 500 and self.janela.height/2 - 500 < self.mobs[i].\
-                    y < self.janela.height/2 + 500 and self.cooldown >= 1:
+                    y < self.janela.height/2 + 500 and self.cooldown >= 1 and not self.mobs[i].health <= 0:
                 if self.mobs[i].collided(self.player) and player_hp > 0:
                     player_hp -= 1
                     self.cooldown = 0
                     self.hud.hp = player_hp
         return player_hp
 
+    def mata_mobs(self):
+        for i in range(len(self.mobs)):
+            if self.mobs[i].health <= 0:
+                self.mobs[i].set_curr_frame(12)
+                # self.mobs.pop(i)
+                # self.coordenadas.pop(i)
+                # self.ref.pop(i)
+                break
+
     def desenha_inimigos(self):
         for i in range(len(self.mobs)):
             self.mobs[i].draw()
-            self.janela.draw_text("{}{}{}{}{}".format('*' if self.mobs[i].health == 5 else "-",
-                                                  '*' if self.mobs[i].health >= 4 else "-",
-                                                  '*' if self.mobs[i].health >= 3 else "-",
-                                                  '*' if self.mobs[i].health >= 2 else "-",
-                                                  '*' if self.mobs[i].health >= 1 else "-"),
-                                  self.mobs[i].x + 5,
-                                  self.mobs[i].y - 10,
-                                  20,
-                                  (255, 255, 255))
+            if not self.mobs[i].health <= 0:
+                self.janela.draw_text("{}{}{}{}{}{}".format('*' if self.mobs[i].health == 5 else "-",
+                                                      '*' if self.mobs[i].health >= 4 else "-",
+                                                      '*' if self.mobs[i].health >= 3 else "-",
+                                                      '*' if self.mobs[i].health >= 2 else "-",
+                                                      '*' if self.mobs[i].health >= 1 else "-",
+                                                            self.mobs[i].health),
+                                      self.mobs[i].x + 5,
+                                      self.mobs[i].y - 10,
+                                      20,
+                                      (255, 255, 255))

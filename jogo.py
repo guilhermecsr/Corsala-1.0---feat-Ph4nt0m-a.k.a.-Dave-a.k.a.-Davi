@@ -46,15 +46,17 @@ class Game:
             self.fundo.draw()
 
             self.mapa.desenha_layer(0)
-
             self.mapa.desenha_layer(1)
+            self.mapa.desenha_layer(2)
 
+            # metodos inimigos
             self.inimigos.movimenta_mobs(self.mapa_grid, False)
             self.player_hp = self.inimigos.dano(self.player_hp)
-
-            self.player.player.draw()
+            self.inimigos.coordenadas_mobs()
 
             self.inimigos.desenha_inimigos()
+
+            self.player.player.draw()
 
             # carrega direcoes do player
             self.combate.atack(self.mapa.virado_cim, self.mapa.virado_bai, self.mapa.virado_esq, self.mapa.virado_dir, False)
@@ -63,12 +65,12 @@ class Game:
             self.cooldown_player += self.janela.delta_time()
             if self.teclado.key_pressed("SPACE"):
                 self.combate.atack(self.mapa.cim, self.mapa.bai, self.mapa.esq, self.mapa.dir, True)
-                if self.combate.acerto(self.mobs, self.cooldown_player, self.coordenadas_mobs):
+                if self.combate.acerto(self.mobs, self.cooldown_player):
                     self.inimigos.movimenta_mobs(self.mapa_grid, True)
                     self.cooldown_player = 0
             self.player.mata_player(self.mobs, self.player_hp)
 
-            self.mapa.desenha_layer(2)
+            # self.mapa.desenha_layer(2)
 
             # desenha H.U.D.
             self.hud.Hud(self.janela, self.player_hp)
