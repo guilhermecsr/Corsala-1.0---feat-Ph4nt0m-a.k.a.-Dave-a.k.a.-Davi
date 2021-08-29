@@ -9,13 +9,13 @@ class Combate:
         self.inimigos = inimigos
         self.teclado = Keyboard
 
-        self.sword_frente = Sprite("assets/jogador/sword_frente.png", False, 0, 4)
+        self.sword_frente = Sprite("assets/jogador/sword_frente.png", False, 4)
         self.sword_frente.set_sequence_time(0, 3, 250)
-        self.sword_costas = Sprite("assets/jogador/sword_costas.png", False, 0, 4)
+        self.sword_costas = Sprite("assets/jogador/sword_costas.png", False, 4)
         self.sword_costas.set_sequence_time(0, 3, 250)
-        self.sword_direita = Sprite("assets/jogador/sword_direita.png", False, 0, 4)
+        self.sword_direita = Sprite("assets/jogador/sword_direita.png", False, 4)
         self.sword_direita.set_sequence_time(0, 3, 250)
-        self.sword_esquerda = Sprite("assets/jogador/sword_esquerda.png", False, 0, 4)
+        self.sword_esquerda = Sprite("assets/jogador/sword_esquerda.png", False, 4)
         self.sword_esquerda.set_sequence_time(0, 3, 250)
         self.sword = self.sword_frente
         self.sword.x = self.player.x - self.player.width / 2
@@ -51,14 +51,15 @@ class Combate:
         self.sword.play()
         self.sword.update()
 
-    def acerto(self, mobs, cooldown):
+    def acerto(self, mobs, info_mobs, cooldown):
         self.cooldown = cooldown
         acerto = False
         if self.cooldown >= 1:
             for i in range(len(mobs)):
-                if self.sword.collided(mobs[i]):
-                    acerto = True
-                    mobs[i].health -= 1
+                if info_mobs[i][2] > 0:
+                    if self.sword.collided(mobs[i]):
+                        acerto = True
+                        info_mobs[i][2] -= 1
         self.sword.draw()
         return acerto
 

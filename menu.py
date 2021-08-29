@@ -40,12 +40,12 @@ class Menu:
             if self.mouse.is_over_object(self.button_exit) and self.mouse.is_button_pressed(1):
                 break
 
-            self.button_start = Sprite("assets/start_button.png", False, 0, 2)
+            self.button_start = Sprite("assets/start_button.png", False, 2)
             self.button_start.set_sequence(0, 1)
             self.button_start.x = self.janela.width / 2 - self.button.width / 2
             self.button_start.y = self.janela.height / 2 - self.button.height / 2
 
-            self.button_exit = Sprite("assets/exit_button.png", False, 0, 2)
+            self.button_exit = Sprite("assets/exit_button.png", False, 2)
             self.button_exit.set_sequence(0, 1)
             self.button_exit.x = self.menu_x
             self.button_exit.y = self.menu_y + self.button.height + 25

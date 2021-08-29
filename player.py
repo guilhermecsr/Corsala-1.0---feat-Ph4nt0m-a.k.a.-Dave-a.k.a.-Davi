@@ -12,23 +12,23 @@ class Player:
         self.game_over = GameImage("assets/game_over.png")
 
         # player
-        self.player_frente = Sprite("assets/jogador/player_frente.png", True, 0, 3)
+        self.player_frente = Sprite("assets/jogador/player_frente.png", True, 3)
         self.player_frente.set_sequence_time(0, 2, 100)
-        self.player_costas = Sprite("assets/jogador/player_costas.png", True, 0, 3)
+        self.player_costas = Sprite("assets/jogador/player_costas.png", True, 3)
         self.player_costas.set_sequence_time(0, 2, 100)
-        self.player_direita = Sprite("assets/jogador/player_direita.png", True, 0, 3)
+        self.player_direita = Sprite("assets/jogador/player_direita.png", True, 3)
         self.player_direita.set_sequence_time(0, 2, 100)
-        self.player_esquerda = Sprite("assets/jogador/player_esquerda.png", True, 0, 3)
+        self.player_esquerda = Sprite("assets/jogador/player_esquerda.png", True, 3)
         self.player_esquerda.set_sequence_time(0, 2, 100)
         self.player = self.player_frente
 
-        self.sword_frente = Sprite("assets/jogador/sword_frente.png", False, 0, 4)
+        self.sword_frente = Sprite("assets/jogador/sword_frente.png", False, 4)
         self.sword_frente.set_sequence_time(0, 3, 250)
-        self.sword_costas = Sprite("assets/jogador/sword_costas.png", False, 0, 4)
+        self.sword_costas = Sprite("assets/jogador/sword_costas.png", False, 4)
         self.sword_costas.set_sequence_time(0, 3, 250)
-        self.sword_direita = Sprite("assets/jogador/sword_direita.png", False, 0, 4)
+        self.sword_direita = Sprite("assets/jogador/sword_direita.png", False, 4)
         self.sword_direita.set_sequence_time(0, 3, 250)
-        self.sword_esquerda = Sprite("assets/jogador/sword_esquerda.png", False, 0, 4)
+        self.sword_esquerda = Sprite("assets/jogador/sword_esquerda.png", False, 4)
         self.sword_esquerda.set_sequence_time(0, 3, 250)
         self.sword = self.sword_frente
 

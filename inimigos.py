@@ -16,13 +16,14 @@ class Inimigos:
         self.mapa = mapa.Mapa
         self.player = player
 
-        self.soldado_frente = Sprite("assets/mobs/soldado_frente.png", False, 0, 3)
-        self.soldado_costas = Sprite("assets/mobs/soldado_costas.png", False, 0, 3)
-        self.soldado_direita = Sprite("assets/mobs/soldado_direita.png", False, 0, 3)
-        self.soldado_esquerda = Sprite("assets/mobs/soldado_esquerda.png", False, 0, 3)
+        self.soldado_frente = Sprite("assets/mobs/soldado_frente.png", False, 3)
+        self.soldado_costas = Sprite("assets/mobs/soldado_costas.png", False, 3)
+        self.soldado_direita = Sprite("assets/mobs/soldado_direita.png", False, 3)
+        self.soldado_esquerda = Sprite("assets/mobs/soldado_esquerda.png", False, 3)
         self.soldado = self.soldado_frente
 
-        self.coordenadas = [[15, 15], [3, 3], [3, 5]]
+        # self.coordenadas = [[15, 15], [3, 3], [3, 5]]
+        self.info_mobs = [[15, 15, 5], [3, 3, 5], [3, 5, 5]]
         self.ref = []
         self.a = 0
         self.b = 0
@@ -33,7 +34,7 @@ class Inimigos:
 
     def coordenadas_mobs(self):
         self.mata_mobs()
-        return self.coordenadas
+        return self.info_mobs
 
     def get_line(self, start, end):
         # Bresenham's Line Algorithm
@@ -109,8 +110,8 @@ class Inimigos:
             return True
 
     def cria_mobs(self):
-        for i in self.coordenadas:
-            self.soldado = Sprite("assets/mobs/soldado.png", False, 0, 13, "monstro", 5)
+        for i in self.info_mobs:
+            self.soldado = Sprite("assets/mobs/soldado.png", False, 13)
             self.soldado.set_total_duration(4000)
             self.soldado.play()
             self.mobs.append(self.soldado)
@@ -129,7 +130,7 @@ class Inimigos:
                     obstaculos.append(mapa[i][j])
 
         for i in range(len(self.mobs)):
-            if not self.mobs[i].health <= 0:
+            if not self.info_mobs[i][2] <= 0:
                 if hit:
                     h = -10
                 else:
@@ -154,41 +155,41 @@ class Inimigos:
                         self.ref[i][1] -= 200 * self.janela.delta_time() * h
                         self.mobs[i].set_sequence(9, 11)
                         self.mobs[i].update()
-            self.mobs[i].x = mapa[self.coordenadas[i][0]][self.coordenadas[i][1]].x + self.ref[i][0]
-            self.mobs[i].y = mapa[self.coordenadas[i][0]][self.coordenadas[i][1]].y + self.ref[i][1]
+            self.mobs[i].x = mapa[self.info_mobs[i][0]][self.info_mobs[i][1]].x + self.ref[i][0]
+            self.mobs[i].y = mapa[self.info_mobs[i][0]][self.info_mobs[i][1]].y + self.ref[i][1]
 
     def dano(self, player_hp):
         self.cooldown += self.janela.delta_time()
         for i in range(len(self.mobs)):
 
-            if self.janela.width/2 - 500 < self.mobs[i].\
-                    x < self.janela.width/2 + 500 and self.janela.height/2 - 500 < self.mobs[i].\
-                    y < self.janela.height/2 + 500 and self.cooldown >= 1 and not self.mobs[i].health <= 0:
+            if self.janela.width/2 - 500 < self.mobs[i].x < self.janela.width/2 + 500 \
+                    and self.janela.height/2 - 500 < self.mobs[i].y < self.janela.height/2 + 500 \
+                    and self.cooldown >= 1 \
+                    and not self.info_mobs[i][2] <= 0:
+
                 if self.mobs[i].collided(self.player) and player_hp > 0:
                     player_hp -= 1
                     self.cooldown = 0
                     self.hud.hp = player_hp
+
         return player_hp
 
     def mata_mobs(self):
         for i in range(len(self.mobs)):
-            if self.mobs[i].health <= 0:
+            if self.info_mobs[i][2] <= 0:
                 self.mobs[i].set_curr_frame(12)
-                # self.mobs.pop(i)
-                # self.coordenadas.pop(i)
-                # self.ref.pop(i)
                 break
 
     def desenha_inimigos(self):
         for i in range(len(self.mobs)):
             self.mobs[i].draw()
-            if not self.mobs[i].health <= 0:
-                self.janela.draw_text("{}{}{}{}{}{}".format('*' if self.mobs[i].health == 5 else "-",
-                                                      '*' if self.mobs[i].health >= 4 else "-",
-                                                      '*' if self.mobs[i].health >= 3 else "-",
-                                                      '*' if self.mobs[i].health >= 2 else "-",
-                                                      '*' if self.mobs[i].health >= 1 else "-",
-                                                            self.mobs[i].health),
+            if not self.info_mobs[i][2] <= 0:
+                self.janela.draw_text("{}{}{}{}{}{}".format('*' if self.info_mobs[i][2] == 5 else "-",
+                                                      '*' if self.info_mobs[i][2] >= 4 else "-",
+                                                      '*' if self.info_mobs[i][2] >= 3 else "-",
+                                                      '*' if self.info_mobs[i][2] >= 2 else "-",
+                                                      '*' if self.info_mobs[i][2] >= 1 else "-",
+                                                            self.info_mobs[i][2]),
                                       self.mobs[i].x + 5,
                                       self.mobs[i].y - 10,
                                       20,

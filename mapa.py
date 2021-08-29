@@ -118,16 +118,15 @@ class Mapa:
                 self.posiy = int(''.join(array[2:4]))
                 self.carrega_mapa(self.reader, self.posix, self.posiy)
 
-    def desenha_layer(self, layer):
+    def desenha_layer(self):
         for i in range(len(self.mapa)):
             for j in range(len(self.mapa[i])):
-                if self.mapa[i][j].layer == layer:
-                    self.mapa[i][j].draw()
-                    # self.janela.draw_text("({}, {})".format(i, j),
-                    #                       self.mapa[i][j].x + 10,
-                    #                       self.mapa[i][j].y,
-                    #                       12,
-                    #                       (255, 255, 255))
+                self.mapa[i][j].draw()
+                # self.janela.draw_text("({}, {})".format(i, j),
+                #                       self.mapa[i][j].x + 10,
+                #                       self.mapa[i][j].y,
+                #                       12,
+                #                       (255, 255, 255))
 
     # rever a volta da escada
     def carrega_mapa(self, reader=csv.reader(open('maps/0.csv')), posix=17, posiy=11):
@@ -139,27 +138,27 @@ class Mapa:
         for i in range(len(self.mapa)):
             for j in range(len(self.mapa[i])):
                 if 'parede' in self.mapa[i][j] or 'estrutura' in self.mapa[i][j]:
-                    exec(f"self.{self.mapa[i][j]} = Sprite('assets/96x96/{self.mapa[i][j]}.png', True, 2)")
+                    exec(f"self.{self.mapa[i][j]} = Sprite('assets/96x96/{self.mapa[i][j]}.png', True)")
                     self.mapa[i][j] = eval(f"self.{self.mapa[i][j]}")
                 elif 'chao' in self.mapa[i][j] or 'bueiro' in self.mapa[i][j]:
-                    exec(f"self.{self.mapa[i][j]} = Sprite('assets/96x96/{self.mapa[i][j]}.png', False, 0)")
+                    exec(f"self.{self.mapa[i][j]} = Sprite('assets/96x96/{self.mapa[i][j]}.png', False)")
                     self.mapa[i][j] = eval(f"self.{self.mapa[i][j]}")
                 else:
-                    self.pilar_baixo_largo = Sprite("assets/96x96/pilar_baixo_largo.png", True, 2)
-                    self.void = Sprite("assets/96x96/void.png", False, 0)
-                    self.escada = Sprite("assets/96x96/escada.png", False, 1)
-                    self.escada_dupla_subir_1 = Sprite("assets/96x96/escada_dupla_subir_1.png", True, 0)
-                    self.escada_dupla_subir_2 = Sprite("assets/96x96/escada_dupla_subir_2.png", True, 0)
-                    self.escada_dupla_subir_3 = Sprite("assets/96x96/escada_dupla_subir_3.png", False, 0, 1, '05101')
-                    self.escada_dupla_subir_4 = Sprite("assets/96x96/escada_dupla_subir_4.png", False, 0, 1, '05111')
-                    self.escada_dupla_subir_5 = Sprite("assets/96x96/escada_dupla_subir_5.png", False, 0)
-                    self.escada_dupla_subir_6 = Sprite("assets/96x96/escada_dupla_subir_6.png", False, 0)
-                    self.escada_dupla_descer_1 = Sprite("assets/96x96/escada_dupla_descer_1.png", True, 0)
-                    self.escada_dupla_descer_2 = Sprite("assets/96x96/escada_dupla_descer_2.png", True, 0)
-                    self.escada_dupla_descer_3 = Sprite("assets/96x96/escada_dupla_descer_3.png", False, 0, 1, '05040')
-                    self.escada_dupla_descer_4 = Sprite("assets/96x96/escada_dupla_descer_4.png", False, 0, 1, '05050')
-                    self.escada_dupla_descer_5 = Sprite("assets/96x96/escada_dupla_descer_5.png", False, 0)
-                    self.escada_dupla_descer_6 = Sprite("assets/96x96/escada_dupla_descer_6.png", False, 0)
+                    self.pilar_baixo_largo = Sprite("assets/96x96/pilar_baixo_largo.png", True)
+                    self.void = Sprite("assets/96x96/void.png", False)
+                    self.escada = Sprite("assets/96x96/escada.png", False)
+                    self.escada_dupla_subir_1 = Sprite("assets/96x96/escada_dupla_subir_1.png", True)
+                    self.escada_dupla_subir_2 = Sprite("assets/96x96/escada_dupla_subir_2.png", True)
+                    self.escada_dupla_subir_3 = Sprite("assets/96x96/escada_dupla_subir_3.png", False, info='05101')
+                    self.escada_dupla_subir_4 = Sprite("assets/96x96/escada_dupla_subir_4.png", False, info='05111')
+                    self.escada_dupla_subir_5 = Sprite("assets/96x96/escada_dupla_subir_5.png", False)
+                    self.escada_dupla_subir_6 = Sprite("assets/96x96/escada_dupla_subir_6.png", False)
+                    self.escada_dupla_descer_1 = Sprite("assets/96x96/escada_dupla_descer_1.png", True)
+                    self.escada_dupla_descer_2 = Sprite("assets/96x96/escada_dupla_descer_2.png", True)
+                    self.escada_dupla_descer_3 = Sprite("assets/96x96/escada_dupla_descer_3.png", False, info='05040')
+                    self.escada_dupla_descer_4 = Sprite("assets/96x96/escada_dupla_descer_4.png", False, info='05050')
+                    self.escada_dupla_descer_5 = Sprite("assets/96x96/escada_dupla_descer_5.png", False)
+                    self.escada_dupla_descer_6 = Sprite("assets/96x96/escada_dupla_descer_6.png", False)
 
                     self.mapa[i][j] = eval(f"self.{self.mapa[i][j]}")
 
