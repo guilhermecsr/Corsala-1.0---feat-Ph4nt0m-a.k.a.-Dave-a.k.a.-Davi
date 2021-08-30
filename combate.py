@@ -1,3 +1,4 @@
+import inimigos
 from inimigos import *
 from PPlay.keyboard import *
 
@@ -57,9 +58,11 @@ class Combate:
         if self.cooldown >= 1:
             for i in range(len(mobs)):
                 if info_mobs[i][2] > 0:
-                    if self.sword.collided(mobs[i][info_mobs[i][3]]):
-                        acerto = True
-                        info_mobs[i][2] -= 1
+                    for j in range(4):
+                        if self.sword.collided(mobs[i][j]):
+                            acerto = True
+                            info_mobs[i][2] -= 1
+                            break
         self.sword.draw()
         return acerto
 
