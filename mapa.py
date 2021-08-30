@@ -22,6 +22,7 @@ class Mapa:
         self.mapa = []
         self.chao = self
         self.parede = self
+        self.floor = 0
 
         self.assets_array = [f for f in listdir("assets/96x96") if isfile(join("assets/96x96", f))]
 
@@ -41,15 +42,15 @@ class Mapa:
 
     def move_player(self, player, velocidade):
         self.velocidade = velocidade
-        for i in range(len(self.mapa)):
-            for j in range(len(self.mapa[i])):
+        for i in range(len(self.mapa[self.floor])):
+            for j in range(len(self.mapa[self.floor][i])):
                 if self.teclado.key_pressed("LEFT"):
                     self.esq = True
                     self.virado_esq = True
                     self.virado_dir = False
                     self.virado_cim = False
                     self.virado_bai = False
-                    self.mapa[i][j].x += self.velocidade * self.janela.delta_time()
+                    self.mapa[self.floor][i][j].x += self.velocidade * self.janela.delta_time()
                 else:
                     self.esq = False
 
@@ -59,7 +60,7 @@ class Mapa:
                     self.virado_esq = False
                     self.virado_cim = False
                     self.virado_bai = False
-                    self.mapa[i][j].x -= self.velocidade * self.janela.delta_time()
+                    self.mapa[self.floor][i][j].x -= self.velocidade * self.janela.delta_time()
                 else:
                     self.dir = False
 
@@ -69,7 +70,7 @@ class Mapa:
                     self.virado_dir = False
                     self.virado_esq = False
                     self.virado_bai = False
-                    self.mapa[i][j].y += self.velocidade * self.janela.delta_time()
+                    self.mapa[self.floor][i][j].y += self.velocidade * self.janela.delta_time()
                 else:
                     self.cim = False
 
@@ -79,28 +80,31 @@ class Mapa:
                     self.virado_dir = False
                     self.virado_cim = False
                     self.virado_esq = False
-                    self.mapa[i][j].y -= self.velocidade * self.janela.delta_time()
+                    self.mapa[self.floor][i][j].y -= self.velocidade * self.janela.delta_time()
                 else:
                     self.bai = False
                 self.colisao(player, i, j)
 
     def colisao(self, player, i, j):
-        if player.collided(self.mapa[i][j]):
-            self.assets_especiais(self.mapa[i][j])
-            for k in range(len(self.mapa)):
-                if self.mapa[i][j].solido:
-                    for l in range(len(self.mapa[k])):
-                        if self.dir:
-                            self.mapa[k][l].x += self.velocidade * self.janela.delta_time()
+        if player.collided(self.mapa[self.floor][i][j]):
+            aux = True
+            if self.assets_especiais(self.mapa[self.floor][i][j]):  aux = False
 
-                        if self.esq:
-                            self.mapa[k][l].x -= self.velocidade * self.janela.delta_time()
+            # print(self.floor)
+            for k in range(len(self.mapa[self.floor])):
+                if self.mapa[self.floor][i][j].solido:
+                    for l in range(len(self.mapa[self.floor][k])):
+                        if self.dir and aux == True:
+                            self.mapa[self.floor][k][l].x += self.velocidade * self.janela.delta_time()
 
-                        if self.cim:
-                            self.mapa[k][l].y -= self.velocidade * self.janela.delta_time()
+                        if self.esq and aux == True:
+                            self.mapa[self.floor][k][l].x -= self.velocidade * self.janela.delta_time()
 
-                        if self.bai:
-                            self.mapa[k][l].y += self.velocidade * self.janela.delta_time()
+                        if self.cim and aux == True:
+                            self.mapa[self.floor][k][l].y -= self.velocidade * self.janela.delta_time()
+
+                        if self.bai and aux == True:
+                            self.mapa[self.floor][k][l].y += self.velocidade * self.janela.delta_time()
 
     def assets_especiais(self, asset):
         array = []
@@ -108,41 +112,52 @@ class Mapa:
             for i in asset.info:
                 array.append(i)
             if array[4] == '0':
-                self.reader = csv.reader(self.zero)
+                self.floor = 0
                 self.posix = int(''.join(array[0:2]))
                 self.posiy = int(''.join(array[2:4]))
-                self.carrega_mapa(self.reader, self.posix, self.posiy)
+                #self.carrega_mapa(self.posix, self.posiy)
             elif array[4] == '1':
-                self.reader = csv.reader(self.um)
+                self.floor = 1
                 self.posix = int(''.join(array[0:2]))
                 self.posiy = int(''.join(array[2:4]))
-                self.carrega_mapa(self.reader, self.posix, self.posiy)
+                # self.carrega_mapa(self.posix, self.posiy)
 
     def desenha_layer(self):
-        for i in range(len(self.mapa)):
-            for j in range(len(self.mapa[i])):
-                self.mapa[i][j].draw()
+        for i in range(len(self.mapa[self.floor])):
+            for j in range(len(self.mapa[self.floor][i])):
+                self.mapa[self.floor][i][j].draw()
                 # self.janela.draw_text("({}, {})".format(i, j),
-                #                       self.mapa[i][j].x + 10,
-                #                       self.mapa[i][j].y,
+                #                       self.mapa[self.floor][i][j].x + 10,
+                #                       self.mapa[self.floor][i][j].y,
                 #                       12,
                 #                       (255, 255, 255))
 
-    # rever a volta da escada
-    def carrega_mapa(self, reader=csv.reader(open('maps/0.csv')), posix=17, posiy=11):
-        self.mapa.clear()
-        self.loading = 0
-        for linha in reader:
-            self.mapa.append(linha[:])
+    def aloca_mapa(self, x=17, y=11):
+        for i in range(2):
+            if i == 0:
+                reader = csv.reader(self.zero)
+            elif i == 1:
+                reader = csv.reader(self.um)
+            self.mapa.append(list())
+            for linha in reader:
+                self.mapa[i].append(linha[:])
+            self.carrega_mapa(self.mapa[i], x, y)
+        return self.mapa
 
-        for i in range(len(self.mapa)):
-            for j in range(len(self.mapa[i])):
-                if 'parede' in self.mapa[i][j] or 'estrutura' in self.mapa[i][j]:
-                    exec(f"self.{self.mapa[i][j]} = Sprite('assets/96x96/{self.mapa[i][j]}.png', True)")
-                    self.mapa[i][j] = eval(f"self.{self.mapa[i][j]}")
-                elif 'chao' in self.mapa[i][j] or 'bueiro' in self.mapa[i][j]:
-                    exec(f"self.{self.mapa[i][j]} = Sprite('assets/96x96/{self.mapa[i][j]}.png', False)")
-                    self.mapa[i][j] = eval(f"self.{self.mapa[i][j]}")
+    # rever a volta da escada
+    def carrega_mapa(self, mapa, posix=17, posiy=11):
+        self.loading = 0
+        self.loading = 0
+
+        for i in range(len(mapa)):
+            for j in range(len(mapa[i])):
+
+                if 'parede' in mapa[i][j] or 'estrutura' in mapa[i][j]:
+                    exec(f"self.{mapa[i][j]} = Sprite('assets/96x96/{mapa[i][j]}.png', True)")
+                    mapa[i][j] = eval(f"self.{mapa[i][j]}")
+                elif 'chao' in mapa[i][j] or 'bueiro' in mapa[i][j]:
+                    exec(f"self.{mapa[i][j]} = Sprite('assets/96x96/{mapa[i][j]}.png', False)")
+                    mapa[i][j] = eval(f"self.{mapa[i][j]}")
                 else:
                     self.pilar_baixo_largo = Sprite("assets/96x96/pilar_baixo_largo.png", True)
                     self.void = Sprite("assets/96x96/void.png", False)
@@ -160,13 +175,13 @@ class Mapa:
                     self.escada_dupla_descer_5 = Sprite("assets/96x96/escada_dupla_descer_5.png", False)
                     self.escada_dupla_descer_6 = Sprite("assets/96x96/escada_dupla_descer_6.png", False)
 
-                    self.mapa[i][j] = eval(f"self.{self.mapa[i][j]}")
+                    mapa[i][j] = eval(f"self.{mapa[i][j]}")
 
                 # loanding
                 self.loading += 1
 
-                print("{}%".format(self.loading/4))
+               # print("{}%".format(self.loading/4))
 
-                self.mapa[i][j].x = j * 96 - (posiy * 96 - self.janela.width/2)
-                self.mapa[i][j].y = i * 96 - (posix * 96 - self.janela.height/2)
-        return self.mapa
+                mapa[i][j].x = j * 96 - (posiy * 96 - self.janela.width/2)
+                mapa[i][j].y = i * 96 - (posix * 96 - self.janela.height/2)
+        return mapa

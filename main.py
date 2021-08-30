@@ -11,7 +11,7 @@ from player import *
 
 janela = Window(1600, 900)
 janela.set_title("Campanhas de Corsala")
-fundo = GameImage("assets/fundo_menu_corsala.jpg")
+fundo = Sprite("assets/fundo_menu_corsala.jpg")
 
 mapa = Mapa(janela)
 player = Player(janela)

@@ -20,10 +20,10 @@ class Game:
         self.inimigos = inimigos.Inimigos(janela, Game, self.player.player)
 
         # atributos
-        self.player_hp = 10
+        self.player_hp = 30
         self.hud = hud
 
-        self.mapa_grid = self.mapa.carrega_mapa()
+        self.mapa_grid = self.mapa.aloca_mapa()
         self.mobs = self.inimigos.cria_mobs()
         self.info_mobs = self.inimigos.info_mobs
         self.coordenadas_mobs = self.inimigos.coordenadas_mobs()
@@ -49,7 +49,7 @@ class Game:
             self.mapa.desenha_layer()
 
             # metodos inimigos
-            self.inimigos.movimenta_mobs(self.mapa_grid, False)
+            self.inimigos.movimenta_mobs(self.mapa_grid, self.mapa, False)
             self.player_hp = self.inimigos.dano(self.player_hp)
             self.inimigos.coordenadas_mobs()
 
@@ -65,7 +65,7 @@ class Game:
             if self.teclado.key_pressed("SPACE"):
                 self.combate.atack(self.mapa.cim, self.mapa.bai, self.mapa.esq, self.mapa.dir, True)
                 if self.combate.acerto(self.mobs, self.info_mobs, self.cooldown_player):
-                    self.inimigos.movimenta_mobs(self.mapa_grid, True)
+                    self.inimigos.movimenta_mobs(self.mapa_grid, self.mapa, True)
                     self.cooldown_player = 0
             self.player.mata_player(self.mobs, self.player_hp)
 
