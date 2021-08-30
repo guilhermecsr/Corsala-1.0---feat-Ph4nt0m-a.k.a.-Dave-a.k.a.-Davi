@@ -122,12 +122,13 @@ class Inimigos:
 
         pass
 
-    def movimenta_mobs(self, mapa, hit=False):
+    def movimenta_mobs(self, mapa, infomapa, hit=False):
         obstaculos = []
+
         for i in range(len(mapa)):
             for j in range(len(mapa[i])):
-                if mapa[i][j].solido:
-                    obstaculos.append(mapa[i][j])
+                if mapa[infomapa.floor][i][j].solido:
+                    obstaculos.append(mapa[infomapa.floor][i][j])
 
         for i in range(len(self.mobs)):
             if not self.info_mobs[i][2] <= 0:
