@@ -163,8 +163,8 @@ class Inimigos:
         self.cooldown += self.janela.delta_time()
         for i in range(len(self.mobs)):
 
-            if self.janela.width/2 - 500 < self.mobs[i][self.info_mobs[i][3]self.info_mobs[i][3]self.info_mobs[i][3]].x < self.janela.width/2 + 500 \
-                    and self.janela.height/2 - 500 < self.mobs[i][self.info_mobs[i][3]self.info_mobs[i][3]].y < self.janela.height/2 + 500 \
+            if self.janela.width/2 - 500 < self.mobs[i][self.info_mobs[i][3]].x < self.janela.width/2 + 500 \
+                    and self.janela.height/2 - 500 < self.mobs[i][self.info_mobs[i][3]].y < self.janela.height/2 + 500 \
                     and self.cooldown >= 1 \
                     and not self.info_mobs[i][2] <= 0:
 
