@@ -18,7 +18,6 @@ class Inimigos:
 
         self.info_mobs = [[15, 15, 5, 0], [3, 3, 5, 0], [3, 5, 5, 0]]
         self.ref = []
-        self.soldado = []
         self.a = 0
         self.b = 0
 
@@ -105,16 +104,16 @@ class Inimigos:
 
     def cria_mobs(self):
         for i in self.info_mobs:
-            self.soldado.append(Sprite("assets/mobs/soldado_frente.png", False, 3))
-            self.soldado.append(Sprite("assets/mobs/soldado_esquerda.png", False, 3))
-            self.soldado.append(Sprite("assets/mobs/soldado_direita.png", False, 3))
-            self.soldado.append(Sprite("assets/mobs/soldado_costas.png", False, 3))
-            self.soldado.append(Sprite("assets/mobs/soldado_morto.png", False, 1))
+            self.soldado_frente = Sprite("assets/mobs/soldado_frente.png", False, 3)
+            self.soldado_costas = Sprite("assets/mobs/soldado_costas.png", False, 3)
+            self.soldado_direita = Sprite("assets/mobs/soldado_direita.png", False, 3)
+            self.soldado_esquerda = Sprite("assets/mobs/soldado_esquerda.png", False, 3)
+            self.soldado_morto = Sprite("assets/mobs/soldado_morto.png", False, 1)
+            self.soldado = [self.soldado_frente, self.soldado_esquerda, self.soldado_direita, self.soldado_costas, self.soldado_morto]
             for j in range(len(self.soldado)):
                 self.soldado[j].set_total_duration(1000)
                 self.soldado[j].play()
-            self.mobs.append(self.soldado[:])
-            self.soldado = []
+            self.mobs.append(self.soldado)
             self.ref.append([self.a, self.b])
         return self.mobs
 
@@ -154,16 +153,18 @@ class Inimigos:
                     elif self.mobs[i][self.info_mobs[i][3]].y + self.mobs[i][self.info_mobs[i][3]].height/2 > self.player.y + self.player.height:
                         self.ref[i][1] -= 200 * self.janela.delta_time() * h
                         self.info_mobs[i][3] = 3
+
                         self.mobs[i][3].update()
             self.mobs[i][self.info_mobs[i][3]].x = mapa[infomapa.floor][self.info_mobs[i][0]][self.info_mobs[i][1]].x + self.ref[i][0]
             self.mobs[i][self.info_mobs[i][3]].y = mapa[infomapa.floor][self.info_mobs[i][0]][self.info_mobs[i][1]].y + self.ref[i][1]
+
 
     def dano(self, player_hp):
         self.cooldown += self.janela.delta_time()
         for i in range(len(self.mobs)):
 
-            if self.janela.width/2 - 500 < self.mobs[i][self.info_mobs[i][3]].x < self.janela.width/2 + 500 \
-                    and self.janela.height/2 - 500 < self.mobs[i][self.info_mobs[i][3]].y < self.janela.height/2 + 500 \
+            if self.janela.width/2 - 500 < self.mobs[i][self.info_mobs[i][3]self.info_mobs[i][3]self.info_mobs[i][3]].x < self.janela.width/2 + 500 \
+                    and self.janela.height/2 - 500 < self.mobs[i][self.info_mobs[i][3]self.info_mobs[i][3]].y < self.janela.height/2 + 500 \
                     and self.cooldown >= 1 \
                     and not self.info_mobs[i][2] <= 0:
 
