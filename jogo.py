@@ -20,7 +20,7 @@ class Game:
         self.inimigos = inimigos.Inimigos(janela, Game, self.player.player)
 
         # atributos
-        self.player_hp = 30
+        self.player_hp = 10
         self.hud = hud
 
         self.mapa_grid = self.mapa.aloca_mapa()
