@@ -122,12 +122,12 @@ class Inimigos:
 
         pass
 
-    def movimenta_mobs(self, mapa, hit=False):
+    def movimenta_mobs(self, mapa, infomapa, hit=False):
         obstaculos = []
         for i in range(len(mapa)):
             for j in range(len(mapa[i])):
-                if mapa[i][j].solido:
-                    obstaculos.append(mapa[i][j])
+                if mapa[infomapa.floor][i][j].solido:
+                    obstaculos.append(mapa[infomapa.floor][i][j])
 
         for i in range(len(self.mobs)):
             if not self.info_mobs[i][2] <= 0:
@@ -155,9 +155,8 @@ class Inimigos:
                         self.ref[i][1] -= 200 * self.janela.delta_time() * h
                         self.info_mobs[i][3] = 3
                         self.mobs[i][3].update()
-
-            self.mobs[i][self.info_mobs[i][3]].x = mapa[self.info_mobs[i][0]][self.info_mobs[i][1]].x + self.ref[i][0]
-            self.mobs[i][self.info_mobs[i][3]].y = mapa[self.info_mobs[i][0]][self.info_mobs[i][1]].y + self.ref[i][1]
+            self.mobs[i][self.info_mobs[i][3]].x = mapa[infomapa.floor][self.info_mobs[i][0]][self.info_mobs[i][1]].x + self.ref[i][0]
+            self.mobs[i][self.info_mobs[i][3]].y = mapa[infomapa.floor][self.info_mobs[i][0]][self.info_mobs[i][1]].y + self.ref[i][1]
 
     def dano(self, player_hp):
         self.cooldown += self.janela.delta_time()
