@@ -16,7 +16,8 @@ class Inimigos:
         self.mapa = mapa.Mapa
         self.player = player
 
-        self.info_mobs = [[15, 15, 5, 0], [3, 3, 5, 0], [3, 5, 5, 0]]
+        # info_mobs -> [x, y, hp, face, floor]
+        self.info_mobs = [[15, 15, 5, 0, 0], [3, 3, 5, 0, 0], [3, 5, 5, 0, 0]]
         self.ref = []
         self.a = 0
         self.b = 0
@@ -125,11 +126,11 @@ class Inimigos:
         obstaculos = []
         for i in range(len(mapa)):
             for j in range(len(mapa[i])):
-                if mapa[infomapa.floor][i][j].solido:
-                    obstaculos.append(mapa[infomapa.floor][i][j])
+                if mapa[var.MAPA_FLOOR][i][j].solido:
+                    obstaculos.append(mapa[var.MAPA_FLOOR][i][j])
 
         for i in range(len(self.mobs)):
-            if not self.info_mobs[i][2] <= 0:
+            if not self.info_mobs[i][2] <= 0 and self.info_mobs[i][4] == var.MAPA_FLOOR:
                 if hit:
                     h = -10
                 else:
@@ -155,18 +156,18 @@ class Inimigos:
                         self.info_mobs[i][3] = 3
 
                         self.mobs[i][3].update()
-            self.mobs[i][self.info_mobs[i][3]].x = mapa[infomapa.floor][self.info_mobs[i][0]][self.info_mobs[i][1]].x + self.ref[i][0]
-            self.mobs[i][self.info_mobs[i][3]].y = mapa[infomapa.floor][self.info_mobs[i][0]][self.info_mobs[i][1]].y + self.ref[i][1]
+            self.mobs[i][self.info_mobs[i][3]].x = mapa[var.MAPA_FLOOR][self.info_mobs[i][0]][self.info_mobs[i][1]].x + self.ref[i][0]
+            self.mobs[i][self.info_mobs[i][3]].y = mapa[var.MAPA_FLOOR][self.info_mobs[i][0]][self.info_mobs[i][1]].y + self.ref[i][1]
 
 
     def dano(self, player_hp):
-        self.cooldown += self.janela.delta_time()
+        self.cooldown += self.janela.delta_time() *0
         for i in range(len(self.mobs)):
 
             if self.janela.width/2 - 500 < self.mobs[i][self.info_mobs[i][3]].x < self.janela.width/2 + 500 \
                     and self.janela.height/2 - 500 < self.mobs[i][self.info_mobs[i][3]].y < self.janela.height/2 + 500 \
                     and self.cooldown >= 1 \
-                    and not self.info_mobs[i][2] <= 0:
+                    and not self.info_mobs[i][2] <= 0 and self.info_mobs[i][4] == var.MAPA_FLOOR:
 
                 if self.mobs[i][self.info_mobs[i][3]].collided(self.player) and player_hp > 0:
                     player_hp -= 1
@@ -177,21 +178,22 @@ class Inimigos:
 
     def mata_mobs(self):
         for i in range(len(self.mobs)):
-            if self.info_mobs[i][2] <= 0:
+            if self.info_mobs[i][2] <= 0 and self.info_mobs[i][4] == var.MAPA_FLOOR:
                 self.info_mobs[i][3] = 4
                 break
 
     def desenha_inimigos(self):
         for i in range(len(self.mobs)):
-            self.mobs[i][self.info_mobs[i][3]].draw()
-            if not self.info_mobs[i][2] <= 0:
-                self.janela.draw_text("{}{}{}{}{}{}".format('*' if self.info_mobs[i][2] == 5 else "-",
-                                                      '*' if self.info_mobs[i][2] >= 4 else "-",
-                                                      '*' if self.info_mobs[i][2] >= 3 else "-",
-                                                      '*' if self.info_mobs[i][2] >= 2 else "-",
-                                                      '*' if self.info_mobs[i][2] >= 1 else "-",
-                                                            self.info_mobs[i][2]),
-                                      self.mobs[i][self.info_mobs[i][3]].x + 5,
-                                      self.mobs[i][self.info_mobs[i][3]].y - 10,
-                                      20,
-                                      (255, 255, 255))
+            if self.info_mobs[i][4] == var.MAPA_FLOOR:
+                self.mobs[i][self.info_mobs[i][3]].draw()
+                if not self.info_mobs[i][2] <= 0 and self.info_mobs[i][4] == var.MAPA_FLOOR:  # hp e floor
+                    self.janela.draw_text("{}{}{}{}{}{}".format('*' if self.info_mobs[i][2] == 5 else "-",
+                                                          '*' if self.info_mobs[i][2] >= 4 else "-",
+                                                          '*' if self.info_mobs[i][2] >= 3 else "-",
+                                                          '*' if self.info_mobs[i][2] >= 2 else "-",
+                                                          '*' if self.info_mobs[i][2] >= 1 else "-",
+                                                                self.info_mobs[i][2]),
+                                          self.mobs[i][self.info_mobs[i][3]].x + 5,
+                                          self.mobs[i][self.info_mobs[i][3]].y - 10,
+                                          20,
+                                          (255, 255, 255))

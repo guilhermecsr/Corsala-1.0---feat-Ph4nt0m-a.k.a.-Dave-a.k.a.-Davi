@@ -45,8 +45,6 @@ class Menu:
         if abs(self.fundo.y) >= (self.janela.height) or self.fundo.y >= 0:
             self.direy *= -1
         self.fundo.y -= 40 * self.direy * self.janela.delta_time()
-        #print(f'{self.fundo.x}, {self.fundo.y}')
-
 
     def menu_loop(self):
 
