@@ -56,7 +56,7 @@ class Combate:
         acerto = False
         if self.cooldown >= 1:
             for i in range(len(mobs)):
-                if info_mobs[i][2] > 0:
+                if info_mobs[i][2] > 0 and info_mobs[i][4] == var.MAPA_FLOOR:
                     if self.sword.collided(mobs[i][info_mobs[i][3]]):
                         acerto = True
                         info_mobs[i][2] -= 1
