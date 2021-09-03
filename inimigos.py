@@ -181,9 +181,8 @@ class Inimigos:
 
     def mata_mobs(self):
         for i in range(len(self.mobs)):
-            if self.info_mobs[i][2] <= 0 and self.info_mobs[i][4] == var.MAPA_FLOOR:
+            if self.info_mobs[i][2] <= 0:
                 self.info_mobs[i][3] = 4
-                break
 
     def desenha_inimigos(self):
         for i in range(len(self.mobs)):
