@@ -49,7 +49,7 @@ class Game:
             self.mapa.desenha_layer()
 
             # metodos inimigos
-            self.inimigos.movimenta_mobs(self.mapa_grid, self.mapa, False)
+            self.inimigos.movimenta_mobs(self.mapa_grid, False)
             self.player_hp = self.inimigos.dano(self.player_hp)
             self.inimigos.coordenadas_mobs()
 
@@ -65,7 +65,7 @@ class Game:
             if self.teclado.key_pressed("SPACE"):
                 self.combate.atack(self.mapa.cim, self.mapa.bai, self.mapa.esq, self.mapa.dir, True)
                 if self.combate.acerto(self.mobs, self.info_mobs, self.cooldown_player):
-                    self.inimigos.movimenta_mobs(self.mapa_grid, self.mapa, True)
+                    self.inimigos.movimenta_mobs(self.mapa_grid, True)
                     self.cooldown_player = 0
             self.player.mata_player(self.mobs, self.player_hp)
 

@@ -17,7 +17,7 @@ class Inimigos:
         self.player = player
 
         # info_mobs -> [x, y, hp, face, floor]
-        self.info_mobs = [[15, 15, 5, 0, 0], [3, 3, 5, 0, 0], [3, 5, 5, 0, 0]]
+        self.info_mobs = [[15, 15, 5, 0, 0], [3, 3, 5, 0, 0], [3, 5, 5, 0, 0], [10, 10, 1, 0, 1]]
         self.ref = []
         self.a = 0
         self.b = 0
@@ -76,23 +76,26 @@ class Inimigos:
             points.reverse()
         return points
 
-    def visao(self, i):
+    def visao(self, i, range_):
         soldado_x = self.mobs[i][0].x + self.mobs[i][0].width/2
         soldado_y = self.mobs[i][0].y + self.mobs[i][0].height/2
         player_x = self.player.x + self.player.width/2
         player_y = self.player.y + self.player.height/2
+        # TODO: resolver problema da distancia não medir quando o mob está para o sul do jogador.
         dist = (abs(soldado_x - player_x) + abs(soldado_y - player_y))
+        if i == 0:
+            print(dist, self.info_mobs[0][3])
         if dist <= self.visap_mob:
-            self.visap_mob = 800
+            self.visap_mob = range_ * 1.5
             return True
-        self.visap_mob = 400
+        self.visap_mob = range_
         return False
 
     '''the range_ argument represents the maximum shooting distance at which the shooter will start firing.
         and obstacles is a list of obstacles, shooter and target are both pygame Sprites'''
 
     def visao_em_linha(self, shooter, target, range_, obstacles, i):
-        if self.visao(i):
+        if self.visao(i, range_):
             line_of_sight = self.get_line(shooter.rect.center, target.rect.center)
             zone = shooter.rect.inflate(range_, range_)
             obstacles_list = [rectangle.rect for rectangle in obstacles]  # to support indexing
@@ -122,12 +125,13 @@ class Inimigos:
 
         pass
 
-    def movimenta_mobs(self, mapa, infomapa, hit=False):
-        obstaculos = []
-        for i in range(len(mapa)):
-            for j in range(len(mapa[i])):
-                if mapa[var.MAPA_FLOOR][i][j].solido:
-                    obstaculos.append(mapa[var.MAPA_FLOOR][i][j])
+    def movimenta_mobs(self, mapa, hit=False):
+        obstaculos = [[], [], []]
+        for floor in range(2):
+            for i in range(len(mapa[floor])):
+                for j in range(len(mapa[floor][i])):
+                    if mapa[floor][i][j].solido:
+                        obstaculos[floor].append(mapa[floor][i][j])
 
         for i in range(len(self.mobs)):
             if not self.info_mobs[i][2] <= 0 and self.info_mobs[i][4] == var.MAPA_FLOOR:
@@ -135,7 +139,9 @@ class Inimigos:
                     h = -10
                 else:
                     h = 1
-                if self.visao_em_linha(self.player, self.mobs[i][self.info_mobs[i][3]], 800, obstaculos, i):
+                if self.visao_em_linha(self.player,
+                                       self.mobs[i][self.info_mobs[i][3]],
+                                       400, obstaculos[var.MAPA_FLOOR], i):
                     if self.mobs[i][self.info_mobs[i][3]].x + self.mobs[i][self.info_mobs[i][3]].width/2 < self.player.x:
                         self.ref[i][0] += 200 * self.janela.delta_time() * h
                         self.info_mobs[i][3] = 2
@@ -154,14 +160,14 @@ class Inimigos:
                     elif self.mobs[i][self.info_mobs[i][3]].y + self.mobs[i][self.info_mobs[i][3]].height/2 > self.player.y + self.player.height:
                         self.ref[i][1] -= 200 * self.janela.delta_time() * h
                         self.info_mobs[i][3] = 3
-
                         self.mobs[i][3].update()
+
             self.mobs[i][self.info_mobs[i][3]].x = mapa[var.MAPA_FLOOR][self.info_mobs[i][0]][self.info_mobs[i][1]].x + self.ref[i][0]
             self.mobs[i][self.info_mobs[i][3]].y = mapa[var.MAPA_FLOOR][self.info_mobs[i][0]][self.info_mobs[i][1]].y + self.ref[i][1]
 
 
     def dano(self, player_hp):
-        self.cooldown += self.janela.delta_time() *0
+        self.cooldown += self.janela.delta_time()
         for i in range(len(self.mobs)):
 
             if self.janela.width/2 - 500 < self.mobs[i][self.info_mobs[i][3]].x < self.janela.width/2 + 500 \
@@ -178,9 +184,8 @@ class Inimigos:
 
     def mata_mobs(self):
         for i in range(len(self.mobs)):
-            if self.info_mobs[i][2] <= 0 and self.info_mobs[i][4] == var.MAPA_FLOOR:
+            if self.info_mobs[i][2] <= 0:
                 self.info_mobs[i][3] = 4
-                break
 
     def desenha_inimigos(self):
         for i in range(len(self.mobs)):

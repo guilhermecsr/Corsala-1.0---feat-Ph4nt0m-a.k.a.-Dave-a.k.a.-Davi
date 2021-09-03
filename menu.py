@@ -21,7 +21,7 @@ class Menu:
         self.button = Sprite("assets/Start_button1.png")
         self.button_start = Sprite("assets/Start_button1.png")
         self.button_exit = Sprite("assets/Exit_button1.png")
-        self.titulo = Sprite("assets/candleA_01.png")
+        self.titulo = Sprite("assets/titulo_corsala2.png")
         self.cursor = Sprite("assets/dwarven_gauntlet.png")
 
         # assets position
