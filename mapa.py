@@ -41,6 +41,7 @@ class Mapa:
         # loanding
         self.loading = 0
 
+    # TODO: acertar a movimentacao do mapa quando encostar em assets especiais
     def move_player(self, player, velocidade):
         self.velocidade = velocidade
         for i in range(len(self.mapa[var.MAPA_FLOOR])):
