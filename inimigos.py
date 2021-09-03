@@ -76,32 +76,34 @@ class Inimigos:
             points.reverse()
         return points
 
-    def visao(self, i):
+    def visao(self, i, range_):
         soldado_x = self.mobs[i][0].x + self.mobs[i][0].width/2
         soldado_y = self.mobs[i][0].y + self.mobs[i][0].height/2
         player_x = self.player.x + self.player.width/2
         player_y = self.player.y + self.player.height/2
         dist = (abs(soldado_x - player_x) + abs(soldado_y - player_y))
         if dist <= self.visap_mob:
-            self.visap_mob = 800
+            self.visap_mob = range_ * 2
             return True
-        self.visap_mob = 400
+        self.visap_mob = range_
         return False
 
     '''the range_ argument represents the maximum shooting distance at which the shooter will start firing.
         and obstacles is a list of obstacles, shooter and target are both pygame Sprites'''
 
     def visao_em_linha(self, shooter, target, range_, obstacles, i):
-        if self.visao(i):
-            line_of_sight = self.get_line(shooter.rect.center, target.rect.center)
-            zone = shooter.rect.inflate(range_, range_)
-            obstacles_list = [rectangle.rect for rectangle in obstacles]  # to support indexing
-            obstacles_in_sight = zone.collidelistall(obstacles_list)
-            for x in range(1, len(line_of_sight), 5):
-                for obs_index in obstacles_in_sight:
-                    if obstacles_list[obs_index].collidepoint(line_of_sight[x]):
-                        return False
-            return True
+        # if self.visao(i, range_):
+        line_of_sight = self.get_line(shooter.rect.center, target.rect.center)
+        print(len(line_of_sight))
+        zone = shooter.rect.inflate(range_, range_)
+        obstacles_list = [rectangle.rect for rectangle in obstacles]  # to support indexing
+        obstacles_in_sight = zone.collidelistall(obstacles_list)
+        print(obstacles_in_sight, len(obstacles_list))
+        for x in range(1, len(line_of_sight), 5):
+            for obs_index in obstacles_in_sight:
+                if obstacles_list[obs_index].collidepoint(line_of_sight[x]):
+                    return False
+        return True
 
     def cria_mobs(self):
         for i in self.info_mobs:
@@ -122,12 +124,12 @@ class Inimigos:
 
         pass
 
-    def movimenta_mobs(self, mapa, infomapa, hit=False):
-        obstaculos = []
+    def movimenta_mobs(self, mapa, hit=False):
+        obstaculos = [[], [], []]
         for i in range(len(mapa)):
             for j in range(len(mapa[i])):
                 if mapa[var.MAPA_FLOOR][i][j].solido:
-                    obstaculos.append(mapa[var.MAPA_FLOOR][i][j])
+                    obstaculos[var.MAPA_FLOOR].append(mapa[var.MAPA_FLOOR][i][j])
 
         for i in range(len(self.mobs)):
             if not self.info_mobs[i][2] <= 0 and self.info_mobs[i][4] == var.MAPA_FLOOR:
@@ -135,7 +137,7 @@ class Inimigos:
                     h = -10
                 else:
                     h = 1
-                if self.visao_em_linha(self.player, self.mobs[i][self.info_mobs[i][3]], 800, obstaculos, i):
+                if self.visao_em_linha(self.player, self.mobs[i][self.info_mobs[i][3]], 400, obstaculos[var.MAPA_FLOOR], i):
                     if self.mobs[i][self.info_mobs[i][3]].x + self.mobs[i][self.info_mobs[i][3]].width/2 < self.player.x:
                         self.ref[i][0] += 200 * self.janela.delta_time() * h
                         self.info_mobs[i][3] = 2
