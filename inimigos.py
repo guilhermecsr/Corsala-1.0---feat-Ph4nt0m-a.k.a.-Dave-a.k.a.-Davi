@@ -17,7 +17,7 @@ class Inimigos:
         self.player = player
 
         # info_mobs -> [x, y, hp, face, floor]
-        self.info_mobs = [[15, 15, 5, 0, 0], [3, 3, 5, 0, 0], [3, 5, 5, 0, 0]]
+        self.info_mobs = [[15, 15, 5, 0, 0], [3, 3, 5, 0, 0], [3, 5, 5, 0, 0], [10, 10, 1, 0, 1]]
         self.ref = []
         self.a = 0
         self.b = 0
@@ -81,6 +81,7 @@ class Inimigos:
         soldado_y = self.mobs[i][0].y + self.mobs[i][0].height/2
         player_x = self.player.x + self.player.width/2
         player_y = self.player.y + self.player.height/2
+        # TODO: resolver problema da distancia não medir quando o mob está para o sul do jogador.
         dist = (abs(soldado_x - player_x) + abs(soldado_y - player_y))
         if i == 0:
             print(dist, self.info_mobs[0][3])
@@ -138,7 +139,9 @@ class Inimigos:
                     h = -10
                 else:
                     h = 1
-                if self.visao_em_linha(self.player, self.mobs[i][self.info_mobs[i][3]], 400, obstaculos[var.MAPA_FLOOR], i):
+                if self.visao_em_linha(self.player,
+                                       self.mobs[i][self.info_mobs[i][3]],
+                                       400, obstaculos[var.MAPA_FLOOR], i):
                     if self.mobs[i][self.info_mobs[i][3]].x + self.mobs[i][self.info_mobs[i][3]].width/2 < self.player.x:
                         self.ref[i][0] += 200 * self.janela.delta_time() * h
                         self.info_mobs[i][3] = 2
@@ -164,7 +167,7 @@ class Inimigos:
 
 
     def dano(self, player_hp):
-        self.cooldown += self.janela.delta_time() *0
+        self.cooldown += self.janela.delta_time()
         for i in range(len(self.mobs)):
 
             if self.janela.width/2 - 500 < self.mobs[i][self.info_mobs[i][3]].x < self.janela.width/2 + 500 \
