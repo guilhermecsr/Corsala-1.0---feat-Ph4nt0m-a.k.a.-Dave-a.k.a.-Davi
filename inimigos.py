@@ -94,11 +94,9 @@ class Inimigos:
     def visao_em_linha(self, shooter, target, range_, obstacles, i):
         # if self.visao(i, range_):
         line_of_sight = self.get_line(shooter.rect.center, target.rect.center)
-        print(len(line_of_sight))
         zone = shooter.rect.inflate(range_, range_)
         obstacles_list = [rectangle.rect for rectangle in obstacles]  # to support indexing
         obstacles_in_sight = zone.collidelistall(obstacles_list)
-        print(obstacles_in_sight, len(obstacles_list))
         for x in range(1, len(line_of_sight), 5):
             for obs_index in obstacles_in_sight:
                 if obstacles_list[obs_index].collidepoint(line_of_sight[x]):
