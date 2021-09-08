@@ -17,7 +17,7 @@ class Mapa:
         # carrega o mapa
         self.zero = open('maps/0.csv')
         self.um = open('maps/1.csv')
-        # self.dois = open('maps/2.csv')
+        self.dois = open('maps/2.csv')
         self.reader = csv.reader(self.zero)
         self.aviso_de_comandos = Sprite("assets/aviso_de_comandos.png", False, 1)
         self.mapa = []
@@ -137,16 +137,17 @@ class Mapa:
     def aloca_mapa(self, x=17, y=11):
         reader0 = csv.reader(self.zero)
         reader1 = csv.reader(self.um)
+        reader2 = csv.reader(self.dois)
         self.mapa = [[], [], []]
         for linha in reader0:
             self.mapa[0].append(linha[:])
         for linha in reader1:
             self.mapa[1].append(linha[:])
-        # for linha in reader2:
-        #     self.mapa[2].append(linha[:])
+        for linha in reader2:
+            self.mapa[2].append(linha[:])
         self.mapa[0] = self.carrega_mapa(self.mapa[0], x, y)
         self.mapa[1] = self.carrega_mapa(self.mapa[1], x, y)
-        # self.mapa[2] = self.carrega_mapa(self.mapa[2], x, y)
+        self.mapa[2] = self.carrega_mapa(self.mapa[2], x, y)
         return self.mapa
 
     # rever a volta da escada
@@ -161,6 +162,9 @@ class Mapa:
                     mapa[i][j] = eval(f"self.{mapa[i][j]}")
                 elif 'chao' in mapa[i][j] or 'bueiro' in mapa[i][j]:
                     exec(f"self.{mapa[i][j]} = Sprite('assets/96x96/{mapa[i][j]}.png', False)")
+                    mapa[i][j] = eval(f"self.{mapa[i][j]}")
+                elif 'jardim' in mapa[i][j]:
+                    exec(f"self.{mapa[i][j]} = Sprite('assets/jardim/{mapa[i][j]}.jpg', False)")
                     mapa[i][j] = eval(f"self.{mapa[i][j]}")
                 else:
                     self.pilar_baixo_largo = Sprite("assets/96x96/pilar_baixo_largo.png", True)
