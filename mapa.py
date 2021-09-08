@@ -164,7 +164,7 @@ class Mapa:
                     exec(f"self.{mapa[i][j]} = Sprite('assets/96x96/{mapa[i][j]}.png', False)")
                     mapa[i][j] = eval(f"self.{mapa[i][j]}")
                 elif 'jardim' in mapa[i][j]:
-                    exec(f"self.{mapa[i][j]} = Sprite('assets/jardim/{mapa[i][j]}.png', False)")
+                    exec(f"self.{mapa[i][j]} = Sprite('assets/jardim/{mapa[i][j]}.jpg', False)")
                     mapa[i][j] = eval(f"self.{mapa[i][j]}")
                 else:
                     self.pilar_baixo_largo = Sprite("assets/96x96/pilar_baixo_largo.png", True)
