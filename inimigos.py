@@ -81,10 +81,7 @@ class Inimigos:
         soldado_y = self.mobs[i][0].y + self.mobs[i][0].height/2
         player_x = self.player.x + self.player.width/2
         player_y = self.player.y + self.player.height/2
-        # TODO: resolver problema da distancia não medir quando o mob está para o sul do jogador.
         dist = (abs(soldado_x - player_x) + abs(soldado_y - player_y))
-        if i == 0:
-            print(dist, self.info_mobs[0][3])
         if dist <= self.visap_mob:
             self.visap_mob = range_ * 1.5
             return True

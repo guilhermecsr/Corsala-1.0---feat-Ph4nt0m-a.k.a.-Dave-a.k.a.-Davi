@@ -28,6 +28,8 @@ class Mapa:
         var.MAPA_FLOOR = 0
 
         self.assets_array = [f for f in listdir("assets/96x96") if isfile(join("assets/96x96", f))]
+        self.objetos_info = [[[10, 10]], [[10, 3]], [[]]]
+        self.objetos = [[], [], []]
 
         self.dir = False
         self.esq = False
@@ -92,27 +94,29 @@ class Mapa:
     def colisao(self, player, i, j):
         if player.collided(self.mapa[var.MAPA_FLOOR][i][j]):
             aux = True
-            if self.assets_especiais(self.mapa[var.MAPA_FLOOR][i][j]):  aux = False
+            if self.assets_especiais(self.mapa[var.MAPA_FLOOR][i][j], self.mapa[var.MAPA_FLOOR]):
+                aux = False
 
-            # print(var.MAPA_FLOOR)
             for k in range(len(self.mapa[var.MAPA_FLOOR])):
                 if self.mapa[var.MAPA_FLOOR][i][j].solido:
                     for l in range(len(self.mapa[var.MAPA_FLOOR][k])):
-                        if self.dir and aux == True:
+                        if self.dir and aux:
                             self.mapa[var.MAPA_FLOOR][k][l].x += self.velocidade * self.janela.delta_time()
 
-                        if self.esq and aux == True:
+                        if self.esq and aux:
                             self.mapa[var.MAPA_FLOOR][k][l].x -= self.velocidade * self.janela.delta_time()
 
-                        if self.cim and aux == True:
+                        if self.cim and aux:
                             self.mapa[var.MAPA_FLOOR][k][l].y -= self.velocidade * self.janela.delta_time()
 
-                        if self.bai and aux == True:
+                        if self.bai and aux:
                             self.mapa[var.MAPA_FLOOR][k][l].y += self.velocidade * self.janela.delta_time()
 
-    def assets_especiais(self, asset):
+    def assets_especiais(self, asset, mapa):
         array = []
         if asset.info:
+            self.porta(asset)
+            self.passagem(asset, mapa)
             for i in asset.info:
                 array.append(i)
             if array[4] == '0':
@@ -125,11 +129,61 @@ class Mapa:
                 self.posix = int(''.join(array[0:2]))
                 self.posiy = int(''.join(array[2:4]))
                 self.reposiciona_assets(var.MAPA_FLOOR, self.posiy, self.posix)
+            elif array[4] == '2':
+                var.MAPA_FLOOR = 2
+                self.posix = int(''.join(array[0:2]))
+                self.posiy = int(''.join(array[2:4]))
+                self.reposiciona_assets(var.MAPA_FLOOR, self.posiy, self.posix)
+
+    def porta(self, asset):
+        if 'porta' in asset.info and asset.solido:
+            self.janela.draw_text("*SPACE*", asset.x, asset.y, 20, (255, 255, 255))
+            if self.teclado.key_pressed("space"):
+                asset.set_curr_frame(1)
+                asset.solido = False
+
+    def passagem(self, asset, mapa):
+        action = False
+        if self.teclado.key_pressed("space"):
+            action = True
+        if 'puzzle1' in asset.info:
+            if 'tocha' in asset.info:
+                self.janela.draw_text("Essa tocha esta meio torta...", asset.x, asset.y, 15, (255, 255, 255))
+                if action:
+                    var.TOCHA = True
+                    asset.set_curr_frame(1)
+                    mapa[10][4].set_curr_frame(1)
+                    mapa[10][4].solido = False
+
+            elif 'altar' in asset.info:
+                if not action:
+                    self.janela.draw_text("Por Deus, o que houve aqui?", asset.x, asset.y, 15, (255, 255, 255))
+                elif action and var.ORACLE:
+                    self.janela.draw_text("Sangue é vida, eu acho...", asset.x, asset.y, 15, (255, 255, 255))
+                    var.ALTAR = True
+
+            elif 'oracle' in asset.info:
+                if not action:
+                    self.janela.draw_text("'Ponha vida em minhas mãos que lhe mostrarei o caminho' hum...", asset.x, asset.y, 15, (255, 255, 255))
+                    var.ORACLE = True
+                elif action and var.ALTAR:
+                    self.janela.draw_text("Sangue é vida, eu acho...", asset.x, asset.y, 15, (255, 255, 255))
+                    var.PUZZLE1 = True
+
+    def passagem2(self, asset):
+        if 'puzzle' in asset.info and asset.solido:
+            for i in range(1, 5):
+                exec(f"if 'puzzle{i}' in asset.info: var.PUZZLE{i} = True")
+            self.janela.draw_text("Essa tocha esta meio torta...", asset.x, asset.y, 15, (255, 255, 255))
+            if self.teclado.key_pressed("space"):
+                asset.set_curr_frame(1)
+                asset.solido = False
 
     def desenha_layer(self):
         for i in range(len(self.mapa[var.MAPA_FLOOR])):
             for j in range(len(self.mapa[var.MAPA_FLOOR][i])):
                 self.mapa[var.MAPA_FLOOR][i][j].draw()
+                # pass
                 # self.janela.draw_text("({}, {})".format(i, j),
                 #                       self.mapa[var.MAPA_FLOOR][i][j].x + 10,
                 #                       self.mapa[var.MAPA_FLOOR][i][j].y,
@@ -172,6 +226,12 @@ class Mapa:
                         exec(f"self.{mapa[i][j]} = Sprite('assets/jardim/{mapa[i][j]}.jpg', False)")
                     mapa[i][j] = eval(f"self.{mapa[i][j]}")
 
+                elif 'porta' in mapa[i][j]:
+                    exec(f"self.{mapa[i][j]} = Sprite('assets/96x96/{mapa[i][j]}.png', True, 2, '{mapa[i][j]}')")
+                    exec(f"self.{mapa[i][j]}.set_total_duration(1000)")
+                    exec(f"self.{mapa[i][j]}.play()")
+                    mapa[i][j] = eval(f"self.{mapa[i][j]}")
+
                 else:
                     self.pilar_baixo_largo = Sprite("assets/96x96/pilar_baixo_largo.png", True)
                     self.void = Sprite("assets/96x96/void.png", False)
@@ -188,6 +248,15 @@ class Mapa:
                     self.escada_dupla_descer_4 = Sprite("assets/96x96/escada_dupla_descer_4.png", False, info='05050')
                     self.escada_dupla_descer_5 = Sprite("assets/96x96/escada_dupla_descer_5.png", False)
                     self.escada_dupla_descer_6 = Sprite("assets/96x96/escada_dupla_descer_6.png", False)
+                    self.tocha_par_hor = Sprite("assets/96x96/tocha_par_hor.png", True)
+                    self.tocha_par_hor_torta = Sprite("assets/96x96/tocha_par_hor_torta.png", True, 2, info='puzzle1 tocha')
+                    self.passagem_secreta_1 = Sprite("assets/96x96/passagem_secreta.png", True, 2, info='puzzle1 passagem')
+                    self.passagem_secreta_2 = Sprite("assets/96x96/passagem_secreta.png", True, 2, info='puzzle2')
+                    self.passagem_secreta_3 = Sprite("assets/96x96/passagem_secreta.png", True, 2, info='puzzle3')
+                    self.passagem_secreta_4 = Sprite("assets/96x96/passagem_secreta.png", True, 2, info='puzzle4')
+                    self.altar_sangue_1 = Sprite("assets/96x96/altar_sangue_1.png", True, info='puzzle1 altar')
+                    self.altar_sangue_2 = Sprite("assets/96x96/altar_sangue_2.png", True, info='puzzle1 altar')
+                    self.the_oracle = Sprite("assets/96x96/the_oracle.png", True, info='puzzle1 oracle')
 
                     mapa[i][j] = eval(f"self.{mapa[i][j]}")
 
