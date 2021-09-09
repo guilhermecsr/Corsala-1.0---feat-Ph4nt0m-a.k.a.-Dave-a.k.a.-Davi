@@ -8,7 +8,5 @@ ALTAR = False
 ORACLE = False
 
 PUZZLE2 = False
-
-PUZZLE3 = False
-
-PUZZLE4 = False
+CRYSTAL = False
+MACHINE = False

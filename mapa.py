@@ -117,6 +117,7 @@ class Mapa:
         if asset.info:
             self.porta(asset)
             self.passagem(asset, mapa)
+            self.passagem2(asset, mapa)
             for i in asset.info:
                 array.append(i)
             if array[4] == '0':
@@ -148,7 +149,8 @@ class Mapa:
             action = True
         if 'puzzle1' in asset.info:
             if 'tocha' in asset.info:
-                self.janela.draw_text("Essa tocha esta meio torta...", asset.x, asset.y, 15, (255, 255, 255))
+                if not var.TOCHA:
+                    self.janela.draw_text("Essa tocha esta meio torta...", asset.x, asset.y, 15, (255, 255, 255))
                 if action:
                     var.TOCHA = True
                     asset.set_curr_frame(1)
@@ -169,15 +171,41 @@ class Mapa:
                 elif action and var.ALTAR:
                     self.janela.draw_text("Sangue é vida, eu acho...", asset.x, asset.y, 15, (255, 255, 255))
                     var.PUZZLE1 = True
+                    porta = Sprite('assets/96x96/porta_madeira_ch4.png', True, 2, 'porta')
+                    porta.x = mapa[12][15].x
+                    porta.y = mapa[12][15].y
+                    mapa[12][15] = porta
+                    mapa[12][15].set_total_duration(1000)
 
-    def passagem2(self, asset):
-        if 'puzzle' in asset.info and asset.solido:
-            for i in range(1, 5):
-                exec(f"if 'puzzle{i}' in asset.info: var.PUZZLE{i} = True")
-            self.janela.draw_text("Essa tocha esta meio torta...", asset.x, asset.y, 15, (255, 255, 255))
-            if self.teclado.key_pressed("space"):
-                asset.set_curr_frame(1)
-                asset.solido = False
+    def passagem2(self, asset, mapa):
+        action = False
+        if self.teclado.key_pressed("space"):
+            action = True
+
+        if 'puzzle2' in asset.info or True:
+            if 'machine' in asset.info:
+                if not var.CRYSTAL:
+                    self.janela.draw_text("Uma invenção galvânica, parece sem energia...", asset.x, asset.y, 15, (255, 255, 255))
+                elif var.CRYSTAL and action:
+                    var.MACHINE = True
+                    self.janela.draw_text("Melhor não tocar nisso...", asset.x, asset.y, 15, (255, 255, 255))
+                if var.MACHINE:
+                    var.PUZZLE2 = True
+                    for i in range(1, 7):
+                        exec(f"self.teleport_machine_{i}.set_curr_frame(1)")
+
+            elif 'crystal' in asset.info:
+                if not action and not var.CRYSTAL:
+                    self.janela.draw_text("Ah, esse tipo de cristal não é dessa região...", asset.x, asset.y, 15,
+                                          (255, 255, 255))
+                else:
+                    asset.set_curr_frame(1)
+                    self.janela.draw_text("*Peguei*", asset.x, asset.y, 15, (255, 255, 255))
+                    var.CRYSTAL = True
+
+            if var.PUZZLE2 or True:
+                mapa[13][1].set_curr_frame(1)
+                mapa[13][1].info = '05052'
 
     def desenha_layer(self):
         for i in range(len(self.mapa[var.MAPA_FLOOR])):
@@ -232,6 +260,12 @@ class Mapa:
                     exec(f"self.{mapa[i][j]}.play()")
                     mapa[i][j] = eval(f"self.{mapa[i][j]}")
 
+                elif 'machine' in mapa[i][j]:
+                    exec(f"self.{mapa[i][j]} = Sprite('assets/96x96/{mapa[i][j]}.png', True, 2, info='puzzle2 machine')")
+                    exec(f"self.{mapa[i][j]}.set_total_duration(1000)")
+                    exec(f"self.{mapa[i][j]}.play()")
+                    mapa[i][j] = eval(f"self.{mapa[i][j]}")
+
                 else:
                     self.pilar_baixo_largo = Sprite("assets/96x96/pilar_baixo_largo.png", True)
                     self.void = Sprite("assets/96x96/void.png", False)
@@ -251,12 +285,11 @@ class Mapa:
                     self.tocha_par_hor = Sprite("assets/96x96/tocha_par_hor.png", True)
                     self.tocha_par_hor_torta = Sprite("assets/96x96/tocha_par_hor_torta.png", True, 2, info='puzzle1 tocha')
                     self.passagem_secreta_1 = Sprite("assets/96x96/passagem_secreta.png", True, 2, info='puzzle1 passagem')
-                    self.passagem_secreta_2 = Sprite("assets/96x96/passagem_secreta.png", True, 2, info='puzzle2')
-                    self.passagem_secreta_3 = Sprite("assets/96x96/passagem_secreta.png", True, 2, info='puzzle3')
-                    self.passagem_secreta_4 = Sprite("assets/96x96/passagem_secreta.png", True, 2, info='puzzle4')
                     self.altar_sangue_1 = Sprite("assets/96x96/altar_sangue_1.png", True, info='puzzle1 altar')
                     self.altar_sangue_2 = Sprite("assets/96x96/altar_sangue_2.png", True, info='puzzle1 altar')
                     self.the_oracle = Sprite("assets/96x96/the_oracle.png", True, info='puzzle1 oracle')
+                    self.teleport_crystal_ch4 = Sprite("assets/96x96/teleport_crystal_ch4.png", False, 2, info='puzzle2 crystal')
+                    self.teleport_ch4 = Sprite("assets/96x96/teleport_ch4.png", False, 2, info='puzzle2 tp')
 
                     mapa[i][j] = eval(f"self.{mapa[i][j]}")
 

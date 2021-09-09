@@ -10,11 +10,11 @@ parede_esquerda,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita,chao4,c
 parede_esquerda,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita,chao4,chao4,parede_direita,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita
 parede_esquerda,parede_horizontal,parede_horizontal,tocha_par_hor_torta,passagem_secreta_1,tocha_par_hor,parede_horizontal,parede_horizontal,parede_direita,chao4,chao4,parede_direita,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita
 parede_esquerda,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita,chao4,chao4,parede_direita,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita
-parede_esquerda,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita,chao4,chao4,parede_direita,parede_horizontal,parede_horizontal,tocha_par_hor,porta_madeira_ch4,tocha_par_hor,parede_horizontal,parede_horizontal,parede_direita
+parede_esquerda,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita,chao4,chao4,parede_direita,parede_horizontal,parede_horizontal,tocha_par_hor,parede_horizontal,tocha_par_hor,parede_horizontal,parede_horizontal,parede_direita
+parede_esquerda,teleport_ch4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita,chao4,chao4,parede_direita,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita
 parede_esquerda,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita,chao4,chao4,parede_direita,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita
-parede_esquerda,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita,chao4,chao4,parede_direita,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita
-parede_esquerda,chao4,chao4,chao4,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita
-parede_esquerda,chao4,chao4,chao4,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita
-parede_esquerda,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita,chao4,chao4,parede_direita,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita
-parede_esquerda,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita,chao4,chao4,parede_direita,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita
+teleport_machine_1,teleport_machine_2,chao4,chao4,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita
+teleport_machine_3,teleport_machine_4,chao4,chao4,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita
+teleport_machine_5,teleport_machine_6,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita,chao4,chao4,parede_direita,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita
+parede_esquerda,chao4,chao4,chao4,chao4,chao4,chao4,chao4,parede_direita,chao4,chao4,parede_direita,chao4,chao4,chao4,teleport_crystal_ch4,chao4,chao4,chao4,parede_direita
 parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_direita
