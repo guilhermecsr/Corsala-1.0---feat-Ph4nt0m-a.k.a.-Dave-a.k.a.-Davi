@@ -7,6 +7,8 @@ from os import listdir
 from os.path import isfile, join
 from inimigos import *
 import variaveis as var
+import os.path
+
 
 class Mapa:
     def __init__(self, janela):
@@ -218,13 +220,18 @@ class Mapa:
                     exec(f"self.{mapa[i][j]} = Sprite('assets/96x96/{mapa[i][j]}.png', False)")
                     mapa[i][j] = eval(f"self.{mapa[i][j]}")
                 elif 'jardim' in mapa[i][j]:
-                    exec(f"self.{mapa[i][j]} = Sprite('assets/jardim/{mapa[i][j]}.jpg', False)")
+                    if os.path.exists(f'assets/jardim_solido/{mapa[i][j]}.jpg'):
+                        exec(f"self.{mapa[i][j]} = Sprite('assets/jardim/{mapa[i][j]}.jpg', True)")
+                    else:
+                        exec(f"self.{mapa[i][j]} = Sprite('assets/jardim/{mapa[i][j]}.jpg', False)")
                     mapa[i][j] = eval(f"self.{mapa[i][j]}")
+
                 elif 'porta' in mapa[i][j]:
                     exec(f"self.{mapa[i][j]} = Sprite('assets/96x96/{mapa[i][j]}.png', True, 2, '{mapa[i][j]}')")
                     exec(f"self.{mapa[i][j]}.set_total_duration(1000)")
                     exec(f"self.{mapa[i][j]}.play()")
                     mapa[i][j] = eval(f"self.{mapa[i][j]}")
+
                 else:
                     self.pilar_baixo_largo = Sprite("assets/96x96/pilar_baixo_largo.png", True)
                     self.void = Sprite("assets/96x96/void.png", False)
