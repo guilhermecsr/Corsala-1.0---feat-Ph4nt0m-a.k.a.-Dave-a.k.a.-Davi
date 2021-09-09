@@ -40,13 +40,13 @@ class Game:
             if self.teclado.key_pressed("ESC"):
                 break
 
-            self.player.move_player()
-
-            self.mapa.move_player(self.player.player, self.player.velocidade)
-
             self.fundo.draw()
 
             self.mapa.desenha_layer()
+
+            self.player.move_player()
+
+            self.mapa.move_player(self.player.player, self.player.velocidade)
 
             # metodos inimigos
             self.inimigos.movimenta_mobs(self.mapa_grid, False)
@@ -62,14 +62,12 @@ class Game:
 
             # ataque do player
             self.cooldown_player += self.janela.delta_time()
-            if self.teclado.key_pressed("SPACE"):
+            if self.teclado.key_pressed("a"):
                 self.combate.atack(self.mapa.cim, self.mapa.bai, self.mapa.esq, self.mapa.dir, True)
                 if self.combate.acerto(self.mobs, self.info_mobs, self.cooldown_player):
                     self.inimigos.movimenta_mobs(self.mapa_grid, True)
                     self.cooldown_player = 0
             self.player.mata_player(self.mobs, self.player_hp)
-
-            # self.mapa.desenha_layer(2)
 
             # desenha H.U.D.
             self.hud.Hud(self.janela, self.player_hp)
