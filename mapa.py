@@ -47,16 +47,18 @@ class Mapa:
 
     # TODO: acertar a movimentacao do mapa quando encostar em assets especiais
     def move_player(self, player, velocidade):
-        self.velocidade = velocidade
         for i in range(len(self.mapa[var.MAPA_FLOOR])):
             for j in range(len(self.mapa[var.MAPA_FLOOR][i])):
+                if var.BREAK:
+                    var.BREAK = False
+                    break
                 if self.teclado.key_pressed("LEFT"):
                     self.esq = True
                     self.virado_esq = True
                     self.virado_dir = False
                     self.virado_cim = False
                     self.virado_bai = False
-                    self.mapa[var.MAPA_FLOOR][i][j].x += self.velocidade * self.janela.delta_time()
+                    self.mapa[var.MAPA_FLOOR][i][j].x += velocidade * self.janela.delta_time()
                 else:
                     self.esq = False
 
@@ -66,7 +68,7 @@ class Mapa:
                     self.virado_esq = False
                     self.virado_cim = False
                     self.virado_bai = False
-                    self.mapa[var.MAPA_FLOOR][i][j].x -= self.velocidade * self.janela.delta_time()
+                    self.mapa[var.MAPA_FLOOR][i][j].x -= velocidade * self.janela.delta_time()
                 else:
                     self.dir = False
 
@@ -76,7 +78,7 @@ class Mapa:
                     self.virado_dir = False
                     self.virado_esq = False
                     self.virado_bai = False
-                    self.mapa[var.MAPA_FLOOR][i][j].y += self.velocidade * self.janela.delta_time()
+                    self.mapa[var.MAPA_FLOOR][i][j].y += velocidade * self.janela.delta_time()
                 else:
                     self.cim = False
 
@@ -86,12 +88,12 @@ class Mapa:
                     self.virado_dir = False
                     self.virado_cim = False
                     self.virado_esq = False
-                    self.mapa[var.MAPA_FLOOR][i][j].y -= self.velocidade * self.janela.delta_time()
+                    self.mapa[var.MAPA_FLOOR][i][j].y -= velocidade * self.janela.delta_time()
                 else:
                     self.bai = False
-                self.colisao(player, i, j)
+                self.colisao(player, i, j, velocidade)
 
-    def colisao(self, player, i, j):
+    def colisao(self, player, i, j, velocidade):
         if player.collided(self.mapa[var.MAPA_FLOOR][i][j]):
             aux = True
             if self.assets_especiais(self.mapa[var.MAPA_FLOOR][i][j], self.mapa[var.MAPA_FLOOR]):
@@ -101,16 +103,16 @@ class Mapa:
                 if self.mapa[var.MAPA_FLOOR][i][j].solido:
                     for l in range(len(self.mapa[var.MAPA_FLOOR][k])):
                         if self.dir and aux:
-                            self.mapa[var.MAPA_FLOOR][k][l].x += self.velocidade * self.janela.delta_time()
+                            self.mapa[var.MAPA_FLOOR][k][l].x += velocidade * self.janela.delta_time()
 
                         if self.esq and aux:
-                            self.mapa[var.MAPA_FLOOR][k][l].x -= self.velocidade * self.janela.delta_time()
+                            self.mapa[var.MAPA_FLOOR][k][l].x -= velocidade * self.janela.delta_time()
 
                         if self.cim and aux:
-                            self.mapa[var.MAPA_FLOOR][k][l].y -= self.velocidade * self.janela.delta_time()
+                            self.mapa[var.MAPA_FLOOR][k][l].y -= velocidade * self.janela.delta_time()
 
                         if self.bai and aux:
-                            self.mapa[var.MAPA_FLOOR][k][l].y += self.velocidade * self.janela.delta_time()
+                            self.mapa[var.MAPA_FLOOR][k][l].y += velocidade * self.janela.delta_time()
 
     def assets_especiais(self, asset, mapa):
         array = []
@@ -131,6 +133,7 @@ class Mapa:
                 self.posiy = int(''.join(array[2:4]))
                 self.reposiciona_assets(var.MAPA_FLOOR, self.posiy, self.posix)
             elif array[4] == '2':
+                var.BREAK = True
                 var.MAPA_FLOOR = 2
                 self.posix = int(''.join(array[0:2]))
                 self.posiy = int(''.join(array[2:4]))
@@ -182,7 +185,7 @@ class Mapa:
         if self.teclado.key_pressed("space"):
             action = True
 
-        if 'puzzle2' in asset.info or True:
+        if 'puzzle2' in asset.info:
             if 'machine' in asset.info:
                 if not var.CRYSTAL:
                     self.janela.draw_text("Uma invenção galvânica, parece sem energia...", asset.x, asset.y, 15, (255, 255, 255))
@@ -203,9 +206,9 @@ class Mapa:
                     self.janela.draw_text("*Peguei*", asset.x, asset.y, 15, (255, 255, 255))
                     var.CRYSTAL = True
 
-            if var.PUZZLE2 or True:
+            if var.PUZZLE2:
                 mapa[13][1].set_curr_frame(1)
-                mapa[13][1].info = '05052'
+                mapa[13][1].info = '25072'
 
     def desenha_layer(self):
         for i in range(len(self.mapa[var.MAPA_FLOOR])):
