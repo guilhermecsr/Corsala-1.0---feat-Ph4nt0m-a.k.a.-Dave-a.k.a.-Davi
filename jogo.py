@@ -78,7 +78,7 @@ class Game:
                 self.fps = self.frames
                 self.frames = 0
 
-            self.janela.draw_text("fps: {}".format(self.fps), 50, 10, 30, (255, 255, 255))
+            self.janela.draw_text("fps: {}".format(self.fps), 1000, 10, 30, (255, 255, 255))
             self.relogio += self.janela.delta_time()
             self.frames += 1
 

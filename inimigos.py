@@ -158,9 +158,11 @@ class Inimigos:
                         self.ref[i][1] -= 200 * self.janela.delta_time() * h
                         self.info_mobs[i][3] = 3
                         self.mobs[i][3].update()
-
-            self.mobs[i][self.info_mobs[i][3]].x = mapa[var.MAPA_FLOOR][self.info_mobs[i][0]][self.info_mobs[i][1]].x + self.ref[i][0]
-            self.mobs[i][self.info_mobs[i][3]].y = mapa[var.MAPA_FLOOR][self.info_mobs[i][0]][self.info_mobs[i][1]].y + self.ref[i][1]
+            if self.info_mobs[i][4] == var.MAPA_FLOOR:
+                self.mobs[i][self.info_mobs[i][3]].x = mapa[var.MAPA_FLOOR][self.info_mobs[i][0]][self.info_mobs[i][1]].x + self.ref[i][0]
+                self.mobs[i][self.info_mobs[i][3]].y = mapa[var.MAPA_FLOOR][self.info_mobs[i][0]][self.info_mobs[i][1]].y + self.ref[i][1]
+            else:
+                break
 
 
     def dano(self, player_hp):
