@@ -16,8 +16,8 @@ class Inimigos:
         self.mapa = mapa.Mapa
         self.player = player
 
-        # info_mobs -> [x, y, hp, face, floor]
-        self.info_mobs = [[15, 15, 5, 0, 0], [3, 3, 5, 0, 0], [3, 5, 5, 0, 0], [10, 10, 1, 0, 1]]
+        # info_mobs -> [0=x, 1=y, 2=hp, 3=face, 4=floor, 5=hit]
+        self.info_mobs = [[15, 15, 5, 0, 0, False], [3, 3, 5, 0, 0, False], [3, 5, 5, 0, 0, False], [10, 10, 1, 0, 1, False]]
         self.ref = []
         self.a = 0
         self.b = 0
@@ -122,7 +122,7 @@ class Inimigos:
 
         pass
 
-    def movimenta_mobs(self, mapa, hit=False):
+    def movimenta_mobs(self, mapa):
         obstaculos = [[], [], []]
         for floor in range(2):
             for i in range(len(mapa[floor])):
@@ -132,8 +132,9 @@ class Inimigos:
 
         for i in range(len(self.mobs)):
             if not self.info_mobs[i][2] <= 0 and self.info_mobs[i][4] == var.MAPA_FLOOR:
-                if hit:
+                if self.info_mobs[i][5]:
                     h = -10
+                    self.info_mobs[i][5] = False
                 else:
                     h = 1
                 if self.visao_em_linha(self.player,
@@ -163,7 +164,6 @@ class Inimigos:
                 self.mobs[i][self.info_mobs[i][3]].y = mapa[var.MAPA_FLOOR][self.info_mobs[i][0]][self.info_mobs[i][1]].y + self.ref[i][1]
             else:
                 break
-
 
     def dano(self, player_hp):
         self.cooldown += self.janela.delta_time()
