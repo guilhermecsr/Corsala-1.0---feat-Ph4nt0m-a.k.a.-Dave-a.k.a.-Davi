@@ -16,8 +16,12 @@ class Inimigos:
         self.mapa = mapa.Mapa
         self.player = player
 
-        # info_mobs -> [0=x, 1=y, 2=hp, 3=face, 4=floor, 5=hit]
-        self.info_mobs = [[15, 15, 5, 0, 0, False], [3, 3, 5, 0, 0, False], [3, 5, 5, 0, 0, False], [10, 10, 1, 0, 1, False]]
+        # info_mobs -> [0=y, 1=x, 2=hp, 3=face, 4=floor, 5=hit, 6=mob]
+        self.info_mobs = [[15, 15, 5, 0, 0, False, 'soldado'],
+                          [3, 3, 5, 0, 0, False, 'soldado'],
+                          [3, 5, 5, 0, 0, False, 'soldado'],
+                          [10, 10, 1, 0, 1, False, 'soldado'],
+                          [8, 10, 15, 0, 2, False, 'necromancer']]
         self.ref = []
         self.a = 0
         self.b = 0
@@ -104,23 +108,25 @@ class Inimigos:
             return True
 
     def cria_mobs(self):
-        for i in self.info_mobs:
-            self.soldado_frente = Sprite("assets/mobs/soldado_frente.png", False, 3)
-            self.soldado_costas = Sprite("assets/mobs/soldado_costas.png", False, 3)
-            self.soldado_direita = Sprite("assets/mobs/soldado_direita.png", False, 3)
-            self.soldado_esquerda = Sprite("assets/mobs/soldado_esquerda.png", False, 3)
-            self.soldado_morto = Sprite("assets/mobs/soldado_morto.png", False, 1)
-            self.soldado = [self.soldado_frente, self.soldado_esquerda, self.soldado_direita, self.soldado_costas, self.soldado_morto]
-            for j in range(len(self.soldado)):
-                self.soldado[j].set_total_duration(1000)
-                self.soldado[j].play()
-            self.mobs.append(self.soldado)
-            self.ref.append([self.a, self.b])
+        tipos = []
+        for tipo in self.info_mobs:
+            if tipo[6] not in tipos:
+                tipos.append(tipo[6])
+        frames = ['frente', 'esquerda', 'direita', 'costas']
+        for info in range(len(self.info_mobs)):
+            for mob in tipos:
+                if self.info_mobs[info][6] == mob:
+                    exec(f"self.{mob} = []")
+                    for posi in frames:
+                        exec(f"self.{mob}_{posi} = Sprite('assets/mobs/{mob}_{posi}.png', False, 3)")
+                        exec(f"self.{mob}_{posi}.set_total_duration(1000)")
+                        exec(f"self.{mob}_{posi}.play()")
+                        exec(f"self.{mob}.append(self.{mob}_{posi})")
+                    exec(f"self.{mob}_morto = Sprite('assets/mobs/{mob}_morto.png', False, 1)")
+                    exec(f"self.{mob}.append(self.{mob}_morto)")
+                    exec(f"self.mobs.append(self.{mob})")
+                    self.ref.append([self.a, self.b])
         return self.mobs
-
-    def anima_mobs(self):
-
-        pass
 
     def movimenta_mobs(self, mapa):
         obstaculos = [[], [], []]
@@ -131,50 +137,50 @@ class Inimigos:
                         obstaculos[floor].append(mapa[floor][i][j])
 
         for i in range(len(self.mobs)):
-            if not self.info_mobs[i][2] <= 0 and self.info_mobs[i][4] == var.MAPA_FLOOR:
+            hp = self.info_mobs[i][2]
+            face = self.info_mobs[i][3]
+            andar = self.info_mobs[i][4]
+            if not hp <= 0 and andar == var.MAPA_FLOOR:
                 if self.info_mobs[i][5]:
                     h = -10
                     self.info_mobs[i][5] = False
                 else:
                     h = 1
                 if self.visao_em_linha(self.player,
-                                       self.mobs[i][self.info_mobs[i][3]],
+                                       self.mobs[i][face],
                                        400, obstaculos[var.MAPA_FLOOR], i):
-                    if self.mobs[i][self.info_mobs[i][3]].x + self.mobs[i][self.info_mobs[i][3]].width/2 < self.player.x:
+                    if self.mobs[i][face].x + self.mobs[i][face].width/2 < self.player.x:
                         self.ref[i][0] += 200 * self.janela.delta_time() * h
                         self.info_mobs[i][3] = 2
                         self.mobs[i][2].update()
 
-                    elif self.mobs[i][self.info_mobs[i][3]].x + self.mobs[i][self.info_mobs[i][3]].width/2 > self.player.x + self.player.width:
+                    elif self.mobs[i][face].x + self.mobs[i][face].width/2 > self.player.x + self.player.width:
                         self.ref[i][0] -= 200 * self.janela.delta_time() * h
                         self.info_mobs[i][3] = 1
                         self.mobs[i][1].update()
 
-                    elif self.mobs[i][self.info_mobs[i][3]].y + self.mobs[i][self.info_mobs[i][3]].height/2 < self.player.y:
+                    elif self.mobs[i][face].y + self.mobs[i][face].height/2 < self.player.y:
                         self.ref[i][1] += 200 * self.janela.delta_time() * h
                         self.info_mobs[i][3] = 0
                         self.mobs[i][0].update()
 
-                    elif self.mobs[i][self.info_mobs[i][3]].y + self.mobs[i][self.info_mobs[i][3]].height/2 > self.player.y + self.player.height:
+                    elif self.mobs[i][face].y + self.mobs[i][face].height/2 > self.player.y + self.player.height:
                         self.ref[i][1] -= 200 * self.janela.delta_time() * h
                         self.info_mobs[i][3] = 3
                         self.mobs[i][3].update()
-            if self.info_mobs[i][4] == var.MAPA_FLOOR:
-                self.mobs[i][self.info_mobs[i][3]].x = mapa[var.MAPA_FLOOR][self.info_mobs[i][0]][self.info_mobs[i][1]].x + self.ref[i][0]
-                self.mobs[i][self.info_mobs[i][3]].y = mapa[var.MAPA_FLOOR][self.info_mobs[i][0]][self.info_mobs[i][1]].y + self.ref[i][1]
-            else:
-                break
+            self.mobs[i][self.info_mobs[i][3]].x = mapa[var.MAPA_FLOOR][self.info_mobs[i][0]][self.info_mobs[i][1]].x + self.ref[i][0]
+            self.mobs[i][self.info_mobs[i][3]].y = mapa[var.MAPA_FLOOR][self.info_mobs[i][0]][self.info_mobs[i][1]].y + self.ref[i][1]
 
     def dano(self, player_hp):
         self.cooldown += self.janela.delta_time()
         for i in range(len(self.mobs)):
-
-            if self.janela.width/2 - 500 < self.mobs[i][self.info_mobs[i][3]].x < self.janela.width/2 + 500 \
-                    and self.janela.height/2 - 500 < self.mobs[i][self.info_mobs[i][3]].y < self.janela.height/2 + 500 \
+            face = self.info_mobs[i][3]
+            if self.janela.width/2 - 500 < self.mobs[i][face].x < self.janela.width/2 + 500 \
+                    and self.janela.height/2 - 500 < self.mobs[i][face].y < self.janela.height/2 + 500 \
                     and self.cooldown >= 1 \
                     and not self.info_mobs[i][2] <= 0 and self.info_mobs[i][4] == var.MAPA_FLOOR:
 
-                if self.mobs[i][self.info_mobs[i][3]].collided(self.player) and player_hp > 0:
+                if self.mobs[i][face].collided(self.player) and player_hp > 0:
                     player_hp -= 1
                     self.cooldown = 0
                     self.hud.hp = player_hp
@@ -188,16 +194,17 @@ class Inimigos:
 
     def desenha_inimigos(self):
         for i in range(len(self.mobs)):
+            face = self.info_mobs[i][3]
             if self.info_mobs[i][4] == var.MAPA_FLOOR:
-                self.mobs[i][self.info_mobs[i][3]].draw()
+                self.mobs[i][face].draw()
                 if not self.info_mobs[i][2] <= 0 and self.info_mobs[i][4] == var.MAPA_FLOOR:  # hp e floor
-                    self.janela.draw_text("{}{}{}{}{}{}".format('*' if self.info_mobs[i][2] == 5 else "-",
+                    self.janela.draw_text("{}{}{}{}{}{}".format('*' if self.info_mobs[i][2] >= 5 else "-",
                                                           '*' if self.info_mobs[i][2] >= 4 else "-",
                                                           '*' if self.info_mobs[i][2] >= 3 else "-",
                                                           '*' if self.info_mobs[i][2] >= 2 else "-",
                                                           '*' if self.info_mobs[i][2] >= 1 else "-",
                                                                 self.info_mobs[i][2]),
-                                          self.mobs[i][self.info_mobs[i][3]].x + 5,
-                                          self.mobs[i][self.info_mobs[i][3]].y - 10,
+                                          self.mobs[i][face].x + 5,
+                                          self.mobs[i][face].y - 10,
                                           20,
                                           (255, 255, 255))
