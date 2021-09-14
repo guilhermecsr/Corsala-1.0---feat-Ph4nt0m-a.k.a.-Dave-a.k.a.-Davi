@@ -21,16 +21,17 @@ class Hud:
         self.heads_up_display()
 
     def heads_up_display(self):
-        for i in range(self.itens):
-            self.slot = Sprite("assets/hud_frame_test.png")
-
-            # positcoes
-            self.slot.set_position(self.pos_inicial_x + i*60, self.pos_inicial_y)
-
-            self.hud_array.append(self.slot)
-
-            for j in self.hud_array:
-                j.draw()
+        # for i in range(self.itens):
+        #     self.slot = Sprite("assets/hud_frame_test.png")
+        #
+        #     # positcoes
+        #     self.slot.set_position(self.pos_inicial_x + i*60, self.pos_inicial_y)
+        #
+        #     self.hud_array.append(self.slot)
+        #
+        #     for j in self.hud_array:
+        #         j.draw()
+        pass
 
     def health_hud(self):
         for i in range(self.hp):

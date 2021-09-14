@@ -60,6 +60,7 @@ class Combate:
                     if self.sword.collided(mobs[i][info_mobs[i][3]]):
                         acerto = True
                         info_mobs[i][2] -= 1
+                        info_mobs[i][5] = True
         self.sword.draw()
         return acerto
 
