@@ -269,9 +269,7 @@ class Mapa:
                     exec(f"self.{mapa[i][j]}.play()")
                     mapa[i][j] = eval(f"self.{mapa[i][j]}")
 
-                else:
-                    self.pilar_baixo_largo = Sprite("assets/96x96/pilar_baixo_largo.png", True)
-                    self.void = Sprite("assets/96x96/void.png", False)
+                elif 'escada' in mapa[i][j]:
                     self.escada = Sprite("assets/96x96/escada.png", False)
                     self.escada_dupla_subir_1 = Sprite("assets/96x96/escada_dupla_subir_1.png", True)
                     self.escada_dupla_subir_2 = Sprite("assets/96x96/escada_dupla_subir_2.png", True)
@@ -285,6 +283,11 @@ class Mapa:
                     self.escada_dupla_descer_4 = Sprite("assets/96x96/escada_dupla_descer_4.png", False, info='05050')
                     self.escada_dupla_descer_5 = Sprite("assets/96x96/escada_dupla_descer_5.png", False)
                     self.escada_dupla_descer_6 = Sprite("assets/96x96/escada_dupla_descer_6.png", False)
+                    mapa[i][j] = eval(f"self.{mapa[i][j]}")
+
+                else:
+                    self.pilar_baixo_largo = Sprite("assets/96x96/pilar_baixo_largo.png", True)
+                    self.void = Sprite("assets/96x96/void.png", False)
                     self.tocha_par_hor = Sprite("assets/96x96/tocha_par_hor.png", True)
                     self.tocha_par_hor_torta = Sprite("assets/96x96/tocha_par_hor_torta.png", True, 2, info='puzzle1 tocha')
                     self.passagem_secreta_1 = Sprite("assets/96x96/passagem_secreta.png", True, 2, info='puzzle1 passagem')
@@ -293,6 +296,8 @@ class Mapa:
                     self.the_oracle = Sprite("assets/96x96/the_oracle.png", True, info='puzzle1 oracle')
                     self.teleport_crystal_ch4 = Sprite("assets/96x96/teleport_crystal_ch4.png", False, 2, info='puzzle2 crystal')
                     self.teleport_ch4 = Sprite("assets/96x96/teleport_ch4.png", False, 2, info='puzzle2 tp')
+                    self.cama_ch5_1 = Sprite("assets/96x96/cama_ch5_1.png", True)
+                    self.cama_ch5_2 = Sprite("assets/96x96/cama_ch5_2.png", True)
 
                     mapa[i][j] = eval(f"self.{mapa[i][j]}")
 

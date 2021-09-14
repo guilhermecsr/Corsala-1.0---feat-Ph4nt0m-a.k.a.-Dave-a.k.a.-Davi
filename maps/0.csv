@@ -14,7 +14,7 @@ parede_esquerda,bueiro_c_agua,chao4,chao4,chao4,chao4,chao4,chao4,chao4,chao4,ch
 parede_esquerda,chao4,chao4,chao4,chao4,chao4,chao4,chao4,chao4,chao4,chao4,chao4,chao4,chao4,chao4,chao4,chao4,chao2,chao2,parede_direita
 parede_esquerda,parede_horizontal,parede_horizontal,parede_horizontal,porta_grade_ch5,parede_horizontal,parede_direita,parede_horizontal,porta_grade_ch5,parede_horizontal,parede_horizontal,parede_horizontal,parede_direita,chao2,chao2,chao2,chao2,chao2,chao2,parede_direita
 parede_esquerda,chao5,chao5,chao5,chao5,chao5,parede_direita,chao5,chao5,chao5,chao5,chao5,parede_direita,chao2,chao2,chao2,chao2,chao2,chao2,parede_direita
-parede_esquerda,chao5,chao5,chao5,chao5,chao5,parede_direita,chao5,chao5,chao5,chao5,chao5,parede_direita,chao2,chao2,chao2,chao2,chao2,chao2,parede_direita
-parede_esquerda,chao5,chao5,chao5,chao5,chao5,parede_direita,chao5,chao5,chao5,chao5,chao5,parede_direita,chao2,bueiro_s_agua,bueiro_s_agua,bueiro_s_agua,bueiro_s_agua,chao2,parede_direita
+parede_esquerda,chao5,chao5,chao5,chao5,cama_ch5_1,parede_direita,chao5,chao5,chao5,chao5,cama_ch5_1,parede_direita,chao2,chao2,chao2,chao2,chao2,chao2,parede_direita
+parede_esquerda,chao5,chao5,chao5,chao5,cama_ch5_2,parede_direita,chao5,chao5,chao5,chao5,cama_ch5_2,parede_direita,chao2,bueiro_s_agua,bueiro_s_agua,bueiro_s_agua,bueiro_s_agua,chao2,parede_direita
 parede_esquerda,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_horizontal,parede_direita
 void,void,void,void,void,void,void,void,void,void,void,void,void,void,void,void,void,void,void,void
