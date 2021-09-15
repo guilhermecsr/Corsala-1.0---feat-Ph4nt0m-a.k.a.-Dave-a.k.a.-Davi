@@ -215,7 +215,7 @@ class Mapa:
             for j in range(len(self.mapa[var.MAPA_FLOOR][i])):
                 self.mapa[var.MAPA_FLOOR][i][j].draw()
                 # pass
-                # self.janela.draw_text("({}, {})".format(i, j),
+                # self.janela.draw_text("({}, {})".format(j, i),
                 #                       self.mapa[var.MAPA_FLOOR][i][j].x + 10,
                 #                       self.mapa[var.MAPA_FLOOR][i][j].y,
                 #                       12,
