@@ -17,10 +17,10 @@ class Inimigos:
         self.player = player
 
         # info_mobs -> [0=y, 1=x, 2=hp, 3=face, 4=floor, 5=hit, 6=mob]
-        self.info_mobs = [[15, 15, 5, 0, 0, False, 'soldado'],
-                          [3, 3, 5, 0, 0, False, 'soldado'],
-                          [3, 5, 5, 0, 0, False, 'soldado'],
-                          [10, 10, 1, 0, 1, False, 'soldado'],
+        self.info_mobs = [[15, 15, 5, 0, 0, False, 'soldado_zumbi'],
+                          [3, 3, 5, 0, 0, False, 'soldado_zumbi'],
+                          [3, 5, 5, 0, 0, False, 'soldado_zumbi'],
+                          [10, 10, 1, 0, 1, False, 'soldado_zumbi'],
                           [8, 10, 15, 0, 2, False, 'necromancer']]
         # self.info_mobs_teaser = [[13, 12, 1, 0, 1, False, 'esqueleto'],
         #                   [14, 12, 1, 0, 1, False, 'esqueleto'],
@@ -58,6 +58,9 @@ class Inimigos:
         self.visap_mob = 400
 
         self.cooldown = 0
+        self.skull_cooldown = 2
+
+        self.skull_array = []
 
     def coordenadas_mobs(self):
         self.mata_mobs()
@@ -110,11 +113,11 @@ class Inimigos:
         return points
 
     def visao(self, i, range_):
-        soldado_x = self.mobs[i][0].x + self.mobs[i][0].width/2
-        soldado_y = self.mobs[i][0].y + self.mobs[i][0].height/2
+        mob_x = self.mobs[i][0].x + self.mobs[i][0].width/2
+        mob_y = self.mobs[i][0].y + self.mobs[i][0].height/2
         player_x = self.player.x + self.player.width/2
         player_y = self.player.y + self.player.height/2
-        dist = (abs(soldado_x - player_x) + abs(soldado_y - player_y))
+        dist = (abs(mob_x - player_x) + abs(mob_y - player_y))
         if dist <= self.visap_mob:
             self.visap_mob = range_ * 1.5
             return True
@@ -178,36 +181,68 @@ class Inimigos:
                 if self.visao_em_linha(self.player,
                                        self.mobs[i][face],
                                        400, obstaculos[var.MAPA_FLOOR], i):
-                    if self.mobs[i][face].x + self.mobs[i][face].width/2 < self.player.x:
-                        self.ref[i][0] += 200 * self.janela.delta_time() * h
-                        self.info_mobs[i][3] = 2
-                        self.mobs[i][2].update()
+                    if 'necromancer' in self.info_mobs[i][6]:
+                        self.movimenta_mago(i, face)
+                    else:
+                        if self.mobs[i][face].x + self.mobs[i][face].width/2 < self.player.x:
+                            self.ref[i][0] += 200 * self.janela.delta_time() * h
+                            self.info_mobs[i][3] = 2
+                            self.mobs[i][2].update()
 
-                    elif self.mobs[i][face].x + self.mobs[i][face].width/2 > self.player.x + self.player.width:
-                        self.ref[i][0] -= 200 * self.janela.delta_time() * h
-                        self.info_mobs[i][3] = 1
-                        self.mobs[i][1].update()
+                        elif self.mobs[i][face].x + self.mobs[i][face].width/2 > self.player.x + self.player.width:
+                            self.ref[i][0] -= 200 * self.janela.delta_time() * h
+                            self.info_mobs[i][3] = 1
+                            self.mobs[i][1].update()
 
-                    elif self.mobs[i][face].y + self.mobs[i][face].height/2 < self.player.y:
-                        self.ref[i][1] += 200 * self.janela.delta_time() * h
-                        self.info_mobs[i][3] = 0
-                        self.mobs[i][0].update()
+                        elif self.mobs[i][face].y + self.mobs[i][face].height/2 < self.player.y:
+                            self.ref[i][1] += 200 * self.janela.delta_time() * h
+                            self.info_mobs[i][3] = 0
+                            self.mobs[i][0].update()
 
-                    elif self.mobs[i][face].y + self.mobs[i][face].height/2 > self.player.y + self.player.height:
-                        self.ref[i][1] -= 200 * self.janela.delta_time() * h
-                        self.info_mobs[i][3] = 3
-                        self.mobs[i][3].update()
+                        elif self.mobs[i][face].y + self.mobs[i][face].height/2 > self.player.y + self.player.height:
+                            self.ref[i][1] -= 200 * self.janela.delta_time() * h
+                            self.info_mobs[i][3] = 3
+                            self.mobs[i][3].update()
                 self.mobs[i][self.info_mobs[i][3]].x = mapa[var.MAPA_FLOOR][self.info_mobs[i][0]][self.info_mobs[i][1]].x + self.ref[i][0]
                 self.mobs[i][self.info_mobs[i][3]].y = mapa[var.MAPA_FLOOR][self.info_mobs[i][0]][self.info_mobs[i][1]].y + self.ref[i][1]
             else:
                 if self.info_mobs[i][4] == var.MAPA_FLOOR:
-                    self.mobs[i][self.info_mobs[i][3]].x = mapa[var.MAPA_FLOOR][self.info_mobs[i][0]][self.info_mobs[i][1]].x
-                    self.mobs[i][self.info_mobs[i][3]].y = mapa[var.MAPA_FLOOR][self.info_mobs[i][0]][self.info_mobs[i][1]].y
+                    self.mobs[i][self.info_mobs[i][3]].x = mapa[var.MAPA_FLOOR][self.info_mobs[i][0]][self.info_mobs[i][1]].x + self.ref[i][0]
+                    self.mobs[i][self.info_mobs[i][3]].y = mapa[var.MAPA_FLOOR][self.info_mobs[i][0]][self.info_mobs[i][1]].y + self.ref[i][1]
                 else:
                     continue
 
+    def movimenta_mago(self, i, face):
+        var.NECRODIST = (abs(self.mobs[i][face].x - self.player.x) + abs(self.mobs[i][face].y - self.player.y))
+        if var.NECRODIST < 300:
+            direcao = -1
+        elif var.NECRODIST > 350:
+            direcao = 1
+        else:
+            direcao = 0
+        if self.mobs[i][face].x + self.mobs[i][face].width / 2 < self.player.x:
+            self.ref[i][0] += 200 * self.janela.delta_time() * direcao
+            self.info_mobs[i][3] = 2
+            self.mobs[i][2].update()
+
+        elif self.mobs[i][face].x + self.mobs[i][face].width / 2 > self.player.x + self.player.width:
+            self.ref[i][0] -= 200 * self.janela.delta_time() * direcao
+            self.info_mobs[i][3] = 1
+            self.mobs[i][1].update()
+
+        elif self.mobs[i][face].y + self.mobs[i][face].height / 2 < self.player.y:
+            self.ref[i][1] += 200 * self.janela.delta_time() * direcao
+            self.info_mobs[i][3] = 0
+            self.mobs[i][0].update()
+
+        elif self.mobs[i][face].y + self.mobs[i][face].height / 2 > self.player.y + self.player.height:
+            self.ref[i][1] -= 200 * self.janela.delta_time() * direcao
+            self.info_mobs[i][3] = 3
+            self.mobs[i][3].update()
+
     def dano(self, player_hp):
         self.cooldown += self.janela.delta_time()
+        self.skull_cooldown += self.janela.delta_time()
         for i in range(len(self.mobs)):
             face = self.info_mobs[i][3]
             if self.janela.width/2 - 500 < self.mobs[i][face].x < self.janela.width/2 + 500 \
@@ -219,7 +254,41 @@ class Inimigos:
                     player_hp -= 1
                     self.cooldown = 0
                     self.hud.hp = player_hp
+                if 'necromancer' in self.info_mobs[i][6] and self.skull_cooldown >= 3:
+                    self.cria_skull(i)
+        player_hp = self.skull_seek(player_hp)
+        return player_hp
 
+    def cria_skull(self, i):
+        if var.NECRODIST <= 350:
+            self.necro_skull = Sprite('assets/mobs/death_missile.png', frames=4)
+            self.necro_skull.set_total_duration(200)
+            self.necro_skull.x = self.mobs[i][self.info_mobs[i][3]].x
+            self.necro_skull.y = self.mobs[i][self.info_mobs[i][3]].y
+            self.skull_array.append(self.necro_skull)
+            self.skull_cooldown = 0
+
+    def skull_seek(self, player_hp):
+        for i in self.skull_array:
+            if i.x + i.width/2 < self.player.x:
+                i.x += 600 * self.janela.delta_time()
+                i.set_curr_frame(2)
+
+            elif i.x + i.width/2 > self.player.x + self.player.width:
+                i.x -= 600 * self.janela.delta_time()
+                i.set_curr_frame(3)
+
+            if i.y + i.height/2 < self.player.y:
+                i.y += 600 * self.janela.delta_time()
+                i.set_curr_frame(0)
+
+            elif i.y + i.height/2 > self.player.y + self.player.height:
+                i.y -= 600 * self.janela.delta_time()
+                i.set_curr_frame(1)
+            i.draw()
+            if i.collided(self.player):
+                player_hp -= 1
+                self.skull_array.remove(i)
         return player_hp
 
     def mata_mobs(self):
