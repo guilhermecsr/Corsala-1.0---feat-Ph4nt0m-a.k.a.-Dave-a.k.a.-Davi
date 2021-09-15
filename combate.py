@@ -18,7 +18,7 @@ class Combate:
         self.sword_esquerda = Sprite("assets/jogador/sword_esquerda.png", False, 4)
         self.sword_esquerda.set_sequence_time(0, 3, 250)
         self.sword = self.sword_frente
-        self.sword.x = self.player.x - self.player.width / 2
+        self.sword.x = self.player.x - self.player.width/2
         self.sword.y = self.player.y + self.player.height
 
         self.cooldown = 0
@@ -61,7 +61,7 @@ class Combate:
                         acerto = True
                         info_mobs[i][2] -= 1
                         info_mobs[i][5] = True
-        self.sword.draw()
+            self.sword.draw()
         return acerto
 
     def desenha_ataque(self):

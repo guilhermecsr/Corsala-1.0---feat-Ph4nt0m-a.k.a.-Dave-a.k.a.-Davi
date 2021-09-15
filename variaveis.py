@@ -11,4 +11,6 @@ PUZZLE2 = False
 CRYSTAL = False
 MACHINE = False
 
+NECRODIST = 0
+
 BREAK = False
