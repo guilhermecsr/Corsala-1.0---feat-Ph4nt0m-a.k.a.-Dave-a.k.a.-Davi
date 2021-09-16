@@ -193,11 +193,11 @@ class Mapa:
         if self.teclado.key_pressed("space"):
             action = True
 
-        if 'puzzle2' in asset.info or True:
-            if 'machine' in asset.info or True:
+        if 'puzzle2' in asset.info:
+            if 'machine' in asset.info:
                 if not var.CRYSTAL:
                     self.janela.draw_text("Uma invenção galvânica, parece sem energia...", asset.x, asset.y, 15, (255, 255, 255))
-                elif var.CRYSTAL and action or True:
+                elif var.CRYSTAL and action:
                     var.MACHINE = True
                     self.janela.draw_text("Melhor não tocar nisso...", asset.x, asset.y, 15, (255, 255, 255))
                 if var.MACHINE:
@@ -214,7 +214,7 @@ class Mapa:
                     self.janela.draw_text("*Peguei*", asset.x, asset.y, 15, (255, 255, 255))
                     var.CRYSTAL = True
 
-            if var.PUZZLE2 or True:
+            if var.PUZZLE2:
                 mapa[13][1].set_curr_frame(1)
                 mapa[13][1].info = '25072'
 
