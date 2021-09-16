@@ -16,11 +16,20 @@ class Inimigos:
         self.mapa = mapa.Mapa
         self.player = player
 
-        # info_mobs -> [0=y, 1=x, 2=hp, 3=face, 4=floor, 5=hit, 6=mob]
-        self.info_mobs = [[15, 15, 5, 0, 0, False, 'soldado_zumbi'],
-                          [3, 3, 5, 0, 0, False, 'soldado_zumbi'],
+        # info_mobs -> [0=x, 1=y, 2=hp, 3=face, 4=floor, 5=hit, 6=mob]
+        self.info_mobs = [[13, 14, 5, 0, 0, False, 'soldado_zumbi'],
+                          [3, 2, 5, 0, 0, False, 'soldado_zumbi'],
                           [3, 5, 5, 0, 0, False, 'soldado_zumbi'],
-                          [10, 10, 1, 0, 1, False, 'soldado_zumbi'],
+                          [5, 4, 5, 0, 0, False, 'soldado_zumbi'],
+                          [4, 1, 5, 0, 0, False, 'soldado_zumbi'],
+                          [5, 2, 5, 0, 0, False, 'soldado_zumbi'],
+                          [6, 3, 5, 0, 0, False, 'soldado_zumbi'],
+                          [6, 1, 5, 0, 0, False, 'soldado_zumbi'],
+                          [5, 6, 5, 0, 0, False, 'soldado_zumbi'],
+                          [6, 5, 5, 0, 0, False, 'soldado_zumbi'],
+                          [17, 4, 1, 0, 0, False, 'esqueleto', 0],
+                          [9, 11, 1, 0, 2, False, 'esqueleto', 0],
+                          [7, 9, 1, 0, 2, False, 'esqueleto', 0],
                           [8, 10, 15, 0, 2, False, 'necromancer']]
         # self.info_mobs_teaser = [[13, 12, 1, 0, 1, False, 'esqueleto'],
         #                   [14, 12, 1, 0, 1, False, 'esqueleto'],
@@ -155,10 +164,19 @@ class Inimigos:
                         exec(f"self.{mob}_{posi}.play()")
                         exec(f"self.{mob}.append(self.{mob}_{posi})")
                     exec(f"self.{mob}_morto = Sprite('assets/mobs/{mob}_morto.png', False, 1)")
+                    exec(f"self.{mob}_morto.x = 5000")
                     exec(f"self.{mob}.append(self.{mob}_morto)")
                     exec(f"self.mobs.append(self.{mob})")
                     self.ref.append([self.a, self.b])
         return self.mobs
+
+    def esqueleto_levanta(self, i):
+        if 'esqueleto' in self.info_mobs[i][6]:
+            if self.info_mobs[i][2] <= 0:
+                self.info_mobs[i][7] += self.janela.delta_time()
+                if self.info_mobs[i][7] >= 10:
+                    self.info_mobs[i][2] = 1
+                    self.info_mobs[i][7] = 0
 
     def movimenta_mobs(self, mapa):
         obstaculos = [[], [], []]
@@ -169,6 +187,7 @@ class Inimigos:
                         obstaculos[floor].append(mapa[floor][i][j])
 
         for i in range(len(self.mobs)):
+            self.esqueleto_levanta(i)
             hp = self.info_mobs[i][2]
             face = self.info_mobs[i][3]
             andar = self.info_mobs[i][4]
@@ -240,6 +259,7 @@ class Inimigos:
             self.info_mobs[i][3] = 3
             self.mobs[i][3].update()
 
+
     def dano(self, player_hp):
         self.cooldown += self.janela.delta_time()
         self.skull_cooldown += self.janela.delta_time()
@@ -247,15 +267,29 @@ class Inimigos:
             face = self.info_mobs[i][3]
             if self.janela.width/2 - 500 < self.mobs[i][face].x < self.janela.width/2 + 500 \
                     and self.janela.height/2 - 500 < self.mobs[i][face].y < self.janela.height/2 + 500 \
-                    and self.cooldown >= 1 \
                     and not self.info_mobs[i][2] <= 0 and self.info_mobs[i][4] == var.MAPA_FLOOR:
 
-                if self.mobs[i][face].collided(self.player) and player_hp > 0:
-                    player_hp -= 1
+                if ('esqueleto' in self.info_mobs[i][6] or 'necro' in self.info_mobs[i][6])\
+                        and self.mobs[i][face].collided(self.player)\
+                        and player_hp > 0 and self.cooldown >= 1:
+                    var.NECRO_MELEE += 1
+                    if var.NECRO_MELEE >= 10:
+                        player_hp -= 1
+                        var.NECRO_MELEE = 0
+                    self.cooldown = 0
+
+                elif self.mobs[i][face].collided(self.player) and player_hp > 0 and self.cooldown >= 1:
+                    player_hp -= 0
+                    var.PLAYER_VEL = 250
                     self.cooldown = 0
                     self.hud.hp = player_hp
+                elif self.mobs[i][face].collided(self.player):
+                    var.PLAYER_VEL = 250
+
                 if 'necromancer' in self.info_mobs[i][6] and self.skull_cooldown >= 3:
                     self.cria_skull(i)
+            else:
+                var.PLAYER_VEL = 400
         player_hp = self.skull_seek(player_hp)
         return player_hp
 
@@ -302,12 +336,40 @@ class Inimigos:
             if self.info_mobs[i][4] == var.MAPA_FLOOR:
                 self.mobs[i][face].draw()
                 if not self.info_mobs[i][2] <= 0 and self.info_mobs[i][4] == var.MAPA_FLOOR:  # hp e floor
-                    self.janela.draw_text("{}{}{}{}{}{}".format('*' if self.info_mobs[i][2] >= 5 else "-",
+                    if 'esqueleto' in self.info_mobs[i][6]:
+                        self.janela.draw_text("{}".format('*' if self.info_mobs[i][2] >= 1 else "-"),
+                                              self.mobs[i][face].x + self.mobs[i][face].width/2 - 2,
+                                              self.mobs[i][face].y - 10,
+                                              20,
+                                              (255, 255, 255))
+
+                    elif 'necromancer' in self.info_mobs[i][6]:
+                        self.janela.draw_text("{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}".
+                                              format('*' if self.info_mobs[i][2] >= 15 else "-",
+                                              '*' if self.info_mobs[i][2] >= 14 else "-",
+                                              '*' if self.info_mobs[i][2] >= 13 else "-",
+                                              '*' if self.info_mobs[i][2] >= 12 else "-",
+                                              '*' if self.info_mobs[i][2] >= 11 else "-",
+                                              '*' if self.info_mobs[i][2] >= 10 else "-",
+                                              '*' if self.info_mobs[i][2] >= 9 else "-",
+                                              '*' if self.info_mobs[i][2] >= 8 else "-",
+                                              '*' if self.info_mobs[i][2] >= 7 else "-",
+                                              '*' if self.info_mobs[i][2] >= 6 else "-",
+                                              '*' if self.info_mobs[i][2] >= 5 else "-",
+                                              '*' if self.info_mobs[i][2] >= 4 else "-",
+                                              '*' if self.info_mobs[i][2] >= 3 else "-",
+                                              '*' if self.info_mobs[i][2] >= 2 else "-",
+                                              '*' if self.info_mobs[i][2] >= 1 else "-"),
+                                              self.mobs[i][face].x - 30,
+                                              self.mobs[i][face].y - 10,
+                                              20,
+                                              (255, 255, 255))
+                    else:
+                        self.janela.draw_text("{}{}{}{}{}".format('*' if self.info_mobs[i][2] >= 5 else "-",
                                                           '*' if self.info_mobs[i][2] >= 4 else "-",
                                                           '*' if self.info_mobs[i][2] >= 3 else "-",
                                                           '*' if self.info_mobs[i][2] >= 2 else "-",
-                                                          '*' if self.info_mobs[i][2] >= 1 else "-",
-                                                                self.info_mobs[i][2]),
+                                                          '*' if self.info_mobs[i][2] >= 1 else "-"),
                                           self.mobs[i][face].x + 5,
                                           self.mobs[i][face].y - 10,
                                           20,

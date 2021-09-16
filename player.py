@@ -2,6 +2,7 @@ import inimigos
 from PPlay.sprite import *
 from PPlay.keyboard import *
 from PPlay.gameimage import *
+import variaveis as var
 import sys
 
 
@@ -32,7 +33,7 @@ class Player:
         self.sword_esquerda.set_sequence_time(0, 3, 250)
         self.sword = self.sword_frente
 
-        self.velocidade = 400
+        self.velocidade = var.PLAYER_VEL
         # self.player.stop()
 
         # posição relativa a tela

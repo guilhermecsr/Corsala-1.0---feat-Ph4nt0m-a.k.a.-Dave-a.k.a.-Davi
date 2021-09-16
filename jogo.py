@@ -46,7 +46,7 @@ class Game:
 
             self.player.move_player()
 
-            self.mapa.move_player(self.player.player, self.player.velocidade)
+            self.mapa.move_player(self.player.player, var.PLAYER_VEL)
 
             # metodos inimigos
             self.inimigos.movimenta_mobs(self.mapa_grid)
