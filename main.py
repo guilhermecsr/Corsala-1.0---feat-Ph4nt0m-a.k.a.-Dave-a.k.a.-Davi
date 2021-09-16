@@ -1,5 +1,4 @@
 from PPlay.window import *
-from PPlay.gameimage import *
 from menu import *
 from jogo import *
 from mapa import *
