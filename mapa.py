@@ -8,7 +8,7 @@ from os.path import isfile, join
 from inimigos import *
 import variaveis as var
 import os.path
-
+import math
 
 class Mapa:
     def __init__(self, janela):
@@ -52,6 +52,10 @@ class Mapa:
                     var.BREAK = False
                     break
                 if self.teclado.key_pressed("LEFT"):
+                    if self.cim or self.bai:
+                        velocidade = var.PLAYER_VEL_ORIG*(math.sqrt(2)/2) + 50
+                    else:
+                        velocidade = var.PLAYER_VEL_ORIG
                     self.esq = True
                     self.virado_esq = True
                     self.virado_dir = False
@@ -62,6 +66,10 @@ class Mapa:
                     self.esq = False
 
                 if self.teclado.key_pressed("RIGHT"):
+                    if self.cim or self.bai:
+                        velocidade = var.PLAYER_VEL_ORIG*(math.sqrt(2)/2) + 50
+                    else:
+                        velocidade = var.PLAYER_VEL_ORIG
                     self.dir = True
                     self.virado_dir = True
                     self.virado_esq = False
@@ -185,11 +193,11 @@ class Mapa:
         if self.teclado.key_pressed("space"):
             action = True
 
-        if 'puzzle2' in asset.info:
-            if 'machine' in asset.info:
+        if 'puzzle2' in asset.info or True:
+            if 'machine' in asset.info or True:
                 if not var.CRYSTAL:
                     self.janela.draw_text("Uma invenção galvânica, parece sem energia...", asset.x, asset.y, 15, (255, 255, 255))
-                elif var.CRYSTAL and action:
+                elif var.CRYSTAL and action or True:
                     var.MACHINE = True
                     self.janela.draw_text("Melhor não tocar nisso...", asset.x, asset.y, 15, (255, 255, 255))
                 if var.MACHINE:
@@ -206,7 +214,7 @@ class Mapa:
                     self.janela.draw_text("*Peguei*", asset.x, asset.y, 15, (255, 255, 255))
                     var.CRYSTAL = True
 
-            if var.PUZZLE2:
+            if var.PUZZLE2 or True:
                 mapa[13][1].set_curr_frame(1)
                 mapa[13][1].info = '25072'
 

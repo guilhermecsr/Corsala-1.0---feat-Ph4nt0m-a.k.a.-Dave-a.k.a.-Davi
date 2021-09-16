@@ -16,6 +16,7 @@ class Menu:
         self.counter = 0
         self.direx = 1
         self.direy = 1
+        self.counter = 0
 
         # assets
         self.button = Sprite("assets/Start_button1.png")
@@ -49,11 +50,19 @@ class Menu:
     def menu_loop(self):
 
         while True:
+            self.counter += self.janela.delta_time()
+
             # cursor
             self.cursor.x, self.cursor.y = self.mouse.get_position()[0], self.mouse.get_position()[1]
 
             # cliques
-            if self.mouse.is_over_object(self.button_exit) and self.mouse.is_button_pressed(1):
+
+            if self.mouse.is_over_object(self.button_start) and self.mouse.is_button_pressed(1) and self.counter >= 0.5:
+                self.counter = 0
+                self.jogo.game_loop()
+
+            if self.mouse.is_over_object(self.button_exit) and self.mouse.is_button_pressed(1) and self.counter >= 0.5:
+                self.counter = 0
                 break
 
             self.button_start = Sprite("assets/start_button.png", False, 2)
@@ -68,9 +77,6 @@ class Menu:
 
             if self.mouse.is_over_object(self.button_start):
                 self.button_start.set_curr_frame(1)
-
-            if self.mouse.is_over_object(self.button_start) and self.mouse.is_button_pressed(1):
-                self.jogo.game_loop()
 
             if self.mouse.is_over_object(self.button_exit):
                 self.button_exit.set_curr_frame(1)
