@@ -8,7 +8,7 @@ from os.path import isfile, join
 from inimigos import *
 import variaveis as var
 import os.path
-
+import math
 
 class Mapa:
     def __init__(self, janela):
@@ -45,7 +45,6 @@ class Mapa:
         # loanding
         self.loading = 0
 
-    # TODO: acertar a movimentacao do mapa quando encostar em assets especiais
     def move_player(self, player, velocidade):
         for i in range(len(self.mapa[var.MAPA_FLOOR])):
             for j in range(len(self.mapa[var.MAPA_FLOOR][i])):
@@ -53,6 +52,10 @@ class Mapa:
                     var.BREAK = False
                     break
                 if self.teclado.key_pressed("LEFT"):
+                    if self.cim or self.bai:
+                        var.PLAYER_VEL = var.PLAYER_VEL_ORIG*(math.sqrt(2)/2) + 50
+                    else:
+                        var.PLAYER_VEL = var.PLAYER_VEL_ORIG
                     self.esq = True
                     self.virado_esq = True
                     self.virado_dir = False
@@ -63,6 +66,10 @@ class Mapa:
                     self.esq = False
 
                 if self.teclado.key_pressed("RIGHT"):
+                    if self.cim or self.bai:
+                        var.PLAYER_VEL = var.PLAYER_VEL_ORIG*(math.sqrt(2)/2) + 50
+                    else:
+                        var.PLAYER_VEL = var.PLAYER_VEL_ORIG
                     self.dir = True
                     self.virado_dir = True
                     self.virado_esq = False
@@ -73,6 +80,10 @@ class Mapa:
                     self.dir = False
 
                 if self.teclado.key_pressed("UP"):
+                    if self.dir or self.esq:
+                        var.PLAYER_VEL = var.PLAYER_VEL_ORIG*(math.sqrt(2)/2) + 50
+                    else:
+                        var.PLAYER_VEL = var.PLAYER_VEL_ORIG
                     self.cim = True
                     self.virado_cim = True
                     self.virado_dir = False
@@ -83,6 +94,10 @@ class Mapa:
                     self.cim = False
 
                 if self.teclado.key_pressed("DOWN"):
+                    if self.dir or self.esq:
+                        var.PLAYER_VEL = var.PLAYER_VEL_ORIG*(math.sqrt(2)/2) + 50
+                    else:
+                        var.PLAYER_VEL = var.PLAYER_VEL_ORIG
                     self.bai = True
                     self.virado_bai = True
                     self.virado_dir = False
@@ -179,6 +194,7 @@ class Mapa:
                     porta.y = mapa[12][15].y
                     mapa[12][15] = porta
                     mapa[12][15].set_total_duration(1000)
+                    self.janela.draw_text("*Click*", self.janela.width/2, self.janela.height-100, 15, (255, 255, 255))
 
     def passagem2(self, asset, mapa):
         action = False
@@ -238,7 +254,7 @@ class Mapa:
         return self.mapa
 
     # rever a volta da escada
-    def carrega_mapa(self, mapa, posix=17, posiy=11):
+    def carrega_mapa(self, mapa, posiy=17, posix=11):
         self.loading = 0
 
         for i in range(len(mapa)):
@@ -305,8 +321,8 @@ class Mapa:
                 self.loading += 1
                # print("{}%".format(self.loading/4))
 
-                mapa[i][j].x = j * 96 - (posiy * 96 - self.janela.width/2)
-                mapa[i][j].y = i * 96 - (posix * 96 - self.janela.height/2)
+                mapa[i][j].x = j * 96 - (posix * 96 - self.janela.width/2)
+                mapa[i][j].y = i * 96 - (posiy * 96 - self.janela.height/2)
         return mapa
 
     def reposiciona_assets(self, floor, posiy, posix):
