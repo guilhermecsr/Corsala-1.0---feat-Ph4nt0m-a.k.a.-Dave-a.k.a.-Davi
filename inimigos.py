@@ -5,6 +5,7 @@ import hud
 # from jogo import *
 from mapa import *
 import math
+import random as rd
 
 
 class Inimigos:
@@ -65,6 +66,9 @@ class Inimigos:
         self.b = 0
 
         self.visap_mob = 400
+        self.teleporte = Sprite("assets/mobs/teleport.png", frames=4)
+        self.teleporte.set_total_duration(1500)
+        self.teleporte.play()
 
         self.cooldown = 0
         self.skull_cooldown = 2
@@ -179,6 +183,7 @@ class Inimigos:
                     self.info_mobs[i][7] = 0
 
     def movimenta_mobs(self, mapa):
+        var.NECRO_TELEPORT += self.janela.delta_time()
         obstaculos = [[], [], []]
         for floor in range(2):
             for i in range(len(mapa[floor])):
@@ -201,7 +206,9 @@ class Inimigos:
                                        self.mobs[i][face],
                                        400, obstaculos[var.MAPA_FLOOR], i):
                     if 'necromancer' in self.info_mobs[i][6]:
-                        self.movimenta_mago(i, face)
+                        self.info_mobs[i] = self.movimenta_mago(i, face, mapa[var.MAPA_FLOOR])
+                        self.teleporte.x = self.mobs[i][face].x + (self.mobs[i][face].width/2) - (self.teleporte.width/2)
+                        self.teleporte.y = self.mobs[i][face].y + self.mobs[i][face].height - self.teleporte.height
                     else:
                         if self.mobs[i][face].x + self.mobs[i][face].width/2 < self.player.x:
                             self.ref[i][0] += 200 * self.janela.delta_time() * h
@@ -231,7 +238,7 @@ class Inimigos:
                 else:
                     continue
 
-    def movimenta_mago(self, i, face):
+    def movimenta_mago(self, i, face, mapa):
         var.NECRODIST = (abs(self.mobs[i][face].x - self.player.x) + abs(self.mobs[i][face].y - self.player.y))
         if var.NECRODIST < 300:
             direcao = -1
@@ -239,28 +246,56 @@ class Inimigos:
             direcao = 1
         else:
             direcao = 0
+        necro_vel = 200
+        necro_vel = self.colisao_do_mago(self.mobs[i][face], mapa, necro_vel, i)
+
+        self.info_mobs[i] = self.teleporte_mago(i, mapa)
+
         if self.mobs[i][face].x + self.mobs[i][face].width / 2 < self.player.x:
-            self.ref[i][0] += 200 * self.janela.delta_time() * direcao
+            self.ref[i][0] += necro_vel * self.janela.delta_time() * direcao
             self.info_mobs[i][3] = 2
             self.mobs[i][2].update()
 
         elif self.mobs[i][face].x + self.mobs[i][face].width / 2 > self.player.x + self.player.width:
-            self.ref[i][0] -= 200 * self.janela.delta_time() * direcao
+            self.ref[i][0] -= necro_vel * self.janela.delta_time() * direcao
             self.info_mobs[i][3] = 1
             self.mobs[i][1].update()
 
         elif self.mobs[i][face].y + self.mobs[i][face].height / 2 < self.player.y:
-            self.ref[i][1] += 200 * self.janela.delta_time() * direcao
+            self.ref[i][1] += necro_vel * self.janela.delta_time() * direcao
             self.info_mobs[i][3] = 0
             self.mobs[i][0].update()
 
         elif self.mobs[i][face].y + self.mobs[i][face].height / 2 > self.player.y + self.player.height:
-            self.ref[i][1] -= 200 * self.janela.delta_time() * direcao
+            self.ref[i][1] -= necro_vel * self.janela.delta_time() * direcao
             self.info_mobs[i][3] = 3
             self.mobs[i][3].update()
+        return self.info_mobs[i]
 
+
+    def colisao_do_mago(self, mago, mapa, vel, k):
+        for i in range(len(mapa)):
+            for j in range(len(mapa[i])):
+                if mapa[i][j].solido:
+                    if mago.collided(mapa[i][j]):
+                        vel = 0
+        return vel
+
+    def teleporte_mago(self, k, mapa):
+        if var.NECRODIST <= 100 and var.NECRO_TELEPORT >= 0.5:
+            var.NECRO_TELEPORT = 0
+            x = rd.randrange(2, len(mapa)-3)
+            y = rd.randrange(2, len(mapa[x])-3)
+            if not mapa[x][y].solido:
+                self.info_mobs[k][0] = x
+                self.info_mobs[k][1] = y
+
+                self.teleporte.update()
+                self.teleporte.draw()
+        return self.info_mobs[k]
 
     def dano(self, player_hp):
+        array = []
         self.cooldown += self.janela.delta_time()
         self.skull_cooldown += self.janela.delta_time()
         for i in range(len(self.mobs)):
@@ -273,23 +308,21 @@ class Inimigos:
                         and self.mobs[i][face].collided(self.player)\
                         and player_hp > 0 and self.cooldown >= 1:
                     var.NECRO_MELEE += 1
-                    if var.NECRO_MELEE >= 10:
+                    if var.NECRO_MELEE >= 5:
                         player_hp -= 1
                         var.NECRO_MELEE = 0
                     self.cooldown = 0
 
                 elif self.mobs[i][face].collided(self.player) and player_hp > 0 and self.cooldown >= 1:
-                    player_hp -= 0
-                    var.PLAYER_VEL = 250
+                    player_hp -= 1
                     self.cooldown = 0
                     self.hud.hp = player_hp
                 elif self.mobs[i][face].collided(self.player):
-                    var.PLAYER_VEL = 250
-
-                if 'necromancer' in self.info_mobs[i][6] and self.skull_cooldown >= 3:
+                    if self.mobs[i] not in array and len(array) < 8:
+                        array.append(self.mobs[i])
+                    var.PLAYER_VEL = var.PLAYER_VEL_ORIG - (50 * len(array))
+                if 'necromancer' in self.info_mobs[i][6] and self.skull_cooldown >= 5:
                     self.cria_skull(i)
-            else:
-                var.PLAYER_VEL = 400
         player_hp = self.skull_seek(player_hp)
         return player_hp
 

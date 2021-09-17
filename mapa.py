@@ -8,7 +8,7 @@ from os.path import isfile, join
 from inimigos import *
 import variaveis as var
 import os.path
-
+import math
 
 class Mapa:
     def __init__(self, janela):
@@ -52,6 +52,10 @@ class Mapa:
                     var.BREAK = False
                     break
                 if self.teclado.key_pressed("LEFT"):
+                    if self.cim or self.bai:
+                        var.PLAYER_VEL = var.PLAYER_VEL_ORIG*(math.sqrt(2)/2) + 50
+                    else:
+                        var.PLAYER_VEL = var.PLAYER_VEL_ORIG
                     self.esq = True
                     self.virado_esq = True
                     self.virado_dir = False
@@ -62,6 +66,10 @@ class Mapa:
                     self.esq = False
 
                 if self.teclado.key_pressed("RIGHT"):
+                    if self.cim or self.bai:
+                        var.PLAYER_VEL = var.PLAYER_VEL_ORIG*(math.sqrt(2)/2) + 50
+                    else:
+                        var.PLAYER_VEL = var.PLAYER_VEL_ORIG
                     self.dir = True
                     self.virado_dir = True
                     self.virado_esq = False
@@ -72,6 +80,10 @@ class Mapa:
                     self.dir = False
 
                 if self.teclado.key_pressed("UP"):
+                    if self.dir or self.esq:
+                        var.PLAYER_VEL = var.PLAYER_VEL_ORIG*(math.sqrt(2)/2) + 50
+                    else:
+                        var.PLAYER_VEL = var.PLAYER_VEL_ORIG
                     self.cim = True
                     self.virado_cim = True
                     self.virado_dir = False
@@ -82,6 +94,10 @@ class Mapa:
                     self.cim = False
 
                 if self.teclado.key_pressed("DOWN"):
+                    if self.dir or self.esq:
+                        var.PLAYER_VEL = var.PLAYER_VEL_ORIG*(math.sqrt(2)/2) + 50
+                    else:
+                        var.PLAYER_VEL = var.PLAYER_VEL_ORIG
                     self.bai = True
                     self.virado_bai = True
                     self.virado_dir = False
