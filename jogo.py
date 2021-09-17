@@ -42,10 +42,10 @@ class Game:
         self.exit = False
 
         # assets
-        self.button = Sprite("assets/Start_button1.png")
-        self.button_start = Sprite("assets/Start_button1.png")
-        self.button_exit = Sprite("assets/Exit_button1.png")
-        self.titulo = Sprite("assets/titulo_corsala2.png")
+        self.button = Sprite("assets/start_button.png", False, 2)
+        self.button_start = Sprite("assets/start_button.png", False, 2)
+        self.button_exit = Sprite("assets/exit_button.png", False, 2)
+        self.titulo = Sprite("assets/titulo_corsala.png")
         self.cursor = Sprite("assets/dwarven_gauntlet.png")
 
         # assets position
@@ -136,6 +136,8 @@ class Game:
                 if self.combate.acerto(self.mobs, self.info_mobs, self.cooldown_player):
                     self.cooldown_player = 0
             self.player.mata_player(self.mobs, self.player_hp)
+            self.player.player_toma_dano()
+
             if var.NECRO_MORTO:
                 self.end_loop()
 

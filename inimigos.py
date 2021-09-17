@@ -211,22 +211,22 @@ class Inimigos:
                         self.teleporte.y = self.mobs[i][face].y + self.mobs[i][face].height - self.teleporte.height
                     else:
                         if self.mobs[i][face].x + self.mobs[i][face].width/2 < self.player.x:
-                            self.ref[i][0] += 300 * self.janela.delta_time() * h
+                            self.ref[i][0] += 200 * self.janela.delta_time() * h
                             self.info_mobs[i][3] = 2
                             self.mobs[i][2].update()
 
                         elif self.mobs[i][face].x + self.mobs[i][face].width/2 > self.player.x + self.player.width:
-                            self.ref[i][0] -= 300 * self.janela.delta_time() * h
+                            self.ref[i][0] -= 200 * self.janela.delta_time() * h
                             self.info_mobs[i][3] = 1
                             self.mobs[i][1].update()
 
                         elif self.mobs[i][face].y + self.mobs[i][face].height/2 < self.player.y:
-                            self.ref[i][1] += 300 * self.janela.delta_time() * h
+                            self.ref[i][1] += 200 * self.janela.delta_time() * h
                             self.info_mobs[i][3] = 0
                             self.mobs[i][0].update()
 
                         elif self.mobs[i][face].y + self.mobs[i][face].height/2 > self.player.y + self.player.height:
-                            self.ref[i][1] -= 300 * self.janela.delta_time() * h
+                            self.ref[i][1] -= 200 * self.janela.delta_time() * h
                             self.info_mobs[i][3] = 3
                             self.mobs[i][3].update()
                 self.mobs[i][self.info_mobs[i][3]].x = mapa[var.MAPA_FLOOR][self.info_mobs[i][0]][self.info_mobs[i][1]].x + self.ref[i][0]
@@ -315,6 +315,7 @@ class Inimigos:
 
                 elif self.mobs[i][face].collided(self.player) and player_hp > 0 and self.cooldown >= 1:
                     player_hp -= 1
+                    var.PLAYER_HIT = True
                     self.cooldown = 0
                     self.hud.hp = player_hp
                 elif self.mobs[i][face].collided(self.player):
