@@ -136,6 +136,8 @@ class Game:
                 if self.combate.acerto(self.mobs, self.info_mobs, self.cooldown_player):
                     self.cooldown_player = 0
             self.player.mata_player(self.mobs, self.player_hp)
+            self.player.player_toma_dano()
+
             if var.NECRO_MORTO:
                 self.end_loop()
 

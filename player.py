@@ -23,6 +23,13 @@ class Player:
         self.player_esquerda.set_sequence_time(0, 2, 100)
         self.player = self.player_frente
 
+        self.sangue = Sprite("assets/jogador/sangue.png")
+        self.sangue.x = self.janela.width / 2 - self.sangue.width
+        self.sangue.y = self.janela.height / 2 - self.sangue.height - 20
+        self.sangue.set_total_duration(500)
+        self.sangue.play()
+        self.sangue_count = 0
+
         self.sword_frente = Sprite("assets/jogador/sword_frente.png", False, 4)
         self.sword_frente.set_sequence_time(0, 3, 250)
         self.sword_costas = Sprite("assets/jogador/sword_costas.png", False, 4)
@@ -63,6 +70,15 @@ class Player:
             self.player = self.player_direita
             self.player.update()
         self.player.play()
+
+    def player_toma_dano(self):
+        if var.PLAYER_HIT:
+            self.sangue_count += self.janela.delta_time()
+            self.sangue.draw()
+            if self.sangue_count >= 0.1:
+                self.sangue_count = 0
+                var.PLAYER_HIT = False
+
 
     def mata_player(self, mobs, hp):
         if hp <= 0:
