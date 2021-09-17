@@ -295,6 +295,7 @@ class Inimigos:
         return self.info_mobs[k]
 
     def dano(self, player_hp):
+        array = []
         self.cooldown += self.janela.delta_time()
         self.skull_cooldown += self.janela.delta_time()
         for i in range(len(self.mobs)):
@@ -307,23 +308,21 @@ class Inimigos:
                         and self.mobs[i][face].collided(self.player)\
                         and player_hp > 0 and self.cooldown >= 1:
                     var.NECRO_MELEE += 1
-                    if var.NECRO_MELEE >= 10:
+                    if var.NECRO_MELEE >= 5:
                         player_hp -= 1
                         var.NECRO_MELEE = 0
                     self.cooldown = 0
 
                 elif self.mobs[i][face].collided(self.player) and player_hp > 0 and self.cooldown >= 1:
-                    player_hp -= 0
-                    var.PLAYER_VEL = 250
+                    player_hp -= 1
                     self.cooldown = 0
                     self.hud.hp = player_hp
                 elif self.mobs[i][face].collided(self.player):
-                    var.PLAYER_VEL = 250
-
-                if 'necromancer' in self.info_mobs[i][6] and self.skull_cooldown >= 3:
+                    if self.mobs[i] not in array and len(array) < 8:
+                        array.append(self.mobs[i])
+                    var.PLAYER_VEL = var.PLAYER_VEL_ORIG - (50 * len(array))
+                if 'necromancer' in self.info_mobs[i][6] and self.skull_cooldown >= 5:
                     self.cria_skull(i)
-            else:
-                var.PLAYER_VEL = 400
         player_hp = self.skull_seek(player_hp)
         return player_hp
 
