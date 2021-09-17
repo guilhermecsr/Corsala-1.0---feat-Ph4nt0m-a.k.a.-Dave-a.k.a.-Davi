@@ -10,7 +10,7 @@ class Player:
     def __init__(self, janela):
         self.janela = janela
         self.teclado = Keyboard()
-        self.game_over = GameImage("assets/game_over.jpg")
+        self.game_over = GameImage("assets/game_over.png")
 
         # player
         self.player_frente = Sprite("assets/jogador/player_frente.png", True, 3)
