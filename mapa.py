@@ -21,7 +21,6 @@ class Mapa:
         self.um = open('maps/1.csv')
         self.dois = open('maps/2.csv')
         self.reader = csv.reader(self.zero)
-        self.aviso_de_comandos = Sprite("assets/aviso_de_comandos.png", False, 1)
         self.mapa = []
         self.chao = self
         self.parede = self

@@ -6,7 +6,6 @@ class Hud:
         self.janela = janela
 
         self.life = Sprite("assets/jogador/hp_bar_in.png")
-        self.slot = Sprite("assets/hud_frame_test.png")
         self.bar = Sprite("assets/jogador/hp_bar.png")
 
         self.health_array = []
@@ -15,23 +14,9 @@ class Hud:
         self.itens = slots
 
         self.pos_inicial_x = 50
-        self.pos_inicial_y = janela.height - self.slot.height - 50
+        self.pos_inicial_y = janela.height - self.bar.height - 50
 
         self.health_hud()
-        self.heads_up_display()
-
-    def heads_up_display(self):
-        # for i in range(self.itens):
-        #     self.slot = Sprite("assets/hud_frame_test.png")
-        #
-        #     # positcoes
-        #     self.slot.set_position(self.pos_inicial_x + i*60, self.pos_inicial_y)
-        #
-        #     self.hud_array.append(self.slot)
-        #
-        #     for j in self.hud_array:
-        #         j.draw()
-        pass
 
     def health_hud(self):
         for i in range(self.hp):
@@ -49,8 +34,5 @@ class Hud:
         return self.health_array
 
     def draw_hud(self):
-        for i in self.hud_array:
-            i.draw()
-
         for i in self.health_array:
             i.draw()
