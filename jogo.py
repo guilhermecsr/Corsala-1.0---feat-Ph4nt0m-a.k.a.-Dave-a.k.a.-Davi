@@ -1,5 +1,4 @@
 import combate
-from PPlay.mouse import *
 from inimigos import *
 
 
@@ -8,14 +7,12 @@ class Game:
         self.janela = janela
         self.teclado = Keyboard()
         self.player = player
-        self.mouse = Mouse()
 
         # carrega o mapa
         self.mapa = mapa
 
         # gameimages
         self.fundo = GameImage("assets/fundo_preto.png")
-        self.pause = GameImage("assets/pause_menu.png")
 
         # combate
         self.combate = combate.Combate(janela, self.player)
@@ -38,76 +35,10 @@ class Game:
         self.frames = 0
         self.relogio = 0
 
-        # menu de pause
-        self.exit = False
-
-        # assets
-        self.button = Sprite("assets/Start_button1.png")
-        self.button_start = Sprite("assets/Start_button1.png")
-        self.button_exit = Sprite("assets/Exit_button1.png")
-        self.titulo = Sprite("assets/titulo_corsala2.png")
-        self.cursor = Sprite("assets/dwarven_gauntlet.png")
-
-        # assets position
-        self.menu_x = janela.width / 2 - self.button.width / 2
-        self.menu_y = janela.height / 2 - self.button.height / 2
-
-        self.titulo.x = self.janela.width / 2 - self.titulo.width / 2
-        self.titulo.y = self.janela.height / 2 - self.titulo.height / 2
-
-        self.button_start.x = self.menu_x
-        self.button_start.y = self.menu_y
-
-        self.button_exit.x = self.menu_x
-        self.button_exit.y = self.menu_y + self.button.height + 25
-
-    def pause_loop(self):
-        while True:
-            if self.teclado.key_pressed("ESC"):
-                pass
-            # cursor
-            self.cursor.x, self.cursor.y = self.mouse.get_position()[0], self.mouse.get_position()[1]
-
-            # cliques
-            if self.mouse.is_over_object(self.button_exit) and self.mouse.is_button_pressed(1):
-                self.exit = True
-                break
-
-            self.button_start = Sprite("assets/start_button.png", False, 2)
-            self.button_start.set_sequence(0, 1)
-            self.button_start.x = (self.janela.width / 2) - (self.button.width / 2)
-            self.button_start.y = (self.janela.height / 2) - (self.button.height / 2)
-
-            self.button_exit = Sprite("assets/exit_button.png", False, 2)
-            self.button_exit.set_sequence(0, 1)
-            self.button_exit.x = self.menu_x
-            self.button_exit.y = self.menu_y + self.button.height + 25
-
-            if self.mouse.is_over_object(self.button_start):
-                self.button_start.set_curr_frame(1)
-
-            if self.mouse.is_over_object(self.button_start) and self.mouse.is_button_pressed(1):
-                break
-
-            if self.mouse.is_over_object(self.button_exit):
-                self.button_exit.set_curr_frame(1)
-
-            self.pause.draw()
-            self.button_start.draw()
-            self.button_exit.draw()
-            self.titulo.draw()
-            if 550 < self.mouse.get_position()[0] < self.janela.width - 550 - self.cursor.width \
-                    and 300 < self.mouse.get_position()[1] < self.janela.height - 200 - self.cursor.height:
-                self.cursor.draw()
-            self.janela.update()
-
     def game_loop(self):
         while True:
             if self.teclado.key_pressed("ESC"):
-                self.pause_loop()
-                if self.exit:
-                    self.exit = False
-                    break
+                break
 
             self.fundo.draw()
 
