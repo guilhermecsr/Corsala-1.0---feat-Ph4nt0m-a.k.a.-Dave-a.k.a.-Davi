@@ -136,6 +136,8 @@ class Game:
                 if self.combate.acerto(self.mobs, self.info_mobs, self.cooldown_player):
                     self.cooldown_player = 0
             self.player.mata_player(self.mobs, self.player_hp)
+            if var.NECRO_MORTO:
+                self.end_loop()
 
             # desenha H.U.D.
             self.hud.Hud(self.janela, self.player_hp)
@@ -149,5 +151,17 @@ class Game:
             self.janela.draw_text("fps: {}".format(self.fps), 1000, 10, 30, (255, 255, 255))
             self.relogio += self.janela.delta_time()
             self.frames += 1
+
+            self.janela.update()
+
+    def end_loop(self):
+        while True:
+            self.fundo.draw()
+            self.titulo.draw()
+
+            self.janela.draw_text("Obrigado!".format(self.fps), 380, 450, 200, (255, 255, 255))
+
+            if self.teclado.key_pressed("ESC"):
+                exit()
 
             self.janela.update()

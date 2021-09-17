@@ -1,6 +1,7 @@
 from PPlay.sprite import *
 from PPlay.mouse import *
 from PPlay.gameimage import *
+from PPlay.keyboard import *
 from jogo import *
 from mapa import *
 
@@ -12,6 +13,7 @@ class Menu:
         self.jogo = jogo
         self.mapa = Mapa(self.janela)
         self.mouse = Mouse()
+        self.teclado = Keyboard()
         self.mouse.hide()
         self.counter = 0
         self.direx = 1
