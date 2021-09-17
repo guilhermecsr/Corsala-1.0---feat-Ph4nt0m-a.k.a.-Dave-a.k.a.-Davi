@@ -42,24 +42,24 @@ class Game:
         self.exit = False
 
         # assets
-        # self.button = Sprite("assets/Start_button.png", frames=2)
-        # self.button_start = Sprite("assets/Start_button1.png")
-        # self.button_exit = Sprite("assets/Exit_button1.png")
-        # self.titulo = Sprite("assets/titulo_corsala.png")
-        # self.cursor = Sprite("assets/dwarven_gauntlet.png")
+        self.button = Sprite("assets/start_button.png", False, 2)
+        self.button_start = Sprite("assets/start_button.png", False, 2)
+        self.button_exit = Sprite("assets/exit_button.png", False, 2)
+        self.titulo = Sprite("assets/titulo_corsala.png")
+        self.cursor = Sprite("assets/dwarven_gauntlet.png")
 
-        # # assets position
-        # self.menu_x = janela.width / 2 - self.button.width / 2
-        # self.menu_y = janela.height / 2 - self.button.height / 2
-        #
-        # self.titulo.x = self.janela.width / 2 - self.titulo.width / 2
-        # self.titulo.y = self.janela.height / 2 - self.titulo.height / 2
-        #
-        # self.button_start.x = self.menu_x
-        # self.button_start.y = self.menu_y
-        #
-        # self.button_exit.x = self.menu_x
-        # self.button_exit.y = self.menu_y + self.button.height + 25
+        # assets position
+        self.menu_x = janela.width / 2 - self.button.width / 2
+        self.menu_y = janela.height / 2 - self.button.height / 2
+
+        self.titulo.x = self.janela.width / 2 - self.titulo.width / 2
+        self.titulo.y = self.janela.height / 2 - self.titulo.height / 2
+
+        self.button_start.x = self.menu_x
+        self.button_start.y = self.menu_y
+
+        self.button_exit.x = self.menu_x
+        self.button_exit.y = self.menu_y + self.button.height + 25
 
     def pause_loop(self):
         while True:

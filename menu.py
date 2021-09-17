@@ -72,11 +72,13 @@ class Menu:
 
             if self.mouse.is_over_object(self.button_start):
                 self.button_start.set_curr_frame(1)
+            else:
+                self.button_start.set_curr_frame(0)
 
             if self.mouse.is_over_object(self.button_exit):
                 self.button_exit.set_curr_frame(1)
-
-
+            else:
+                self.button_exit.set_curr_frame(0)
 
             self.fundo.draw()
             self.move_fundo()

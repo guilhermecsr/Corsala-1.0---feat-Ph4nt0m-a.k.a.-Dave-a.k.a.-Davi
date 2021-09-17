@@ -10,6 +10,7 @@ import variaveis as var
 import os.path
 import math
 
+
 class Mapa:
     def __init__(self, janela):
         self.janela = janela
@@ -229,7 +230,7 @@ class Mapa:
         for i in range(len(self.mapa[var.MAPA_FLOOR])):
             for j in range(len(self.mapa[var.MAPA_FLOOR][i])):
                 self.mapa[var.MAPA_FLOOR][i][j].draw()
-                # pass
+                # mostra coordenadas dos assets do mapa
                 # self.janela.draw_text("({}, {})".format(j, i),
                 #                       self.mapa[var.MAPA_FLOOR][i][j].x + 10,
                 #                       self.mapa[var.MAPA_FLOOR][i][j].y,

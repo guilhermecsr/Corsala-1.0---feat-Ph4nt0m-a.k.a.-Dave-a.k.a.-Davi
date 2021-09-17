@@ -79,7 +79,6 @@ class Player:
                 self.sangue_count = 0
                 var.PLAYER_HIT = False
 
-
     def mata_player(self, mobs, hp):
         if hp <= 0:
             self.fim(mobs)
