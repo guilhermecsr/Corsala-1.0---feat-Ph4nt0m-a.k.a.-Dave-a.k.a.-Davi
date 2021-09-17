@@ -6,4 +6,4 @@ Controles:
 Esc: retorna
 A: ataca
 Espaço: interage
-
+Setas: movimenta
