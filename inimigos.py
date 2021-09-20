@@ -1,5 +1,6 @@
 import jogo
 import mapa
+import variaveis
 from PPlay.sprite import *
 import hud
 # from jogo import *
@@ -65,8 +66,8 @@ class Inimigos:
         self.a = 0
         self.b = 0
 
-        self.visap_mob = 400
         self.teleporte = Sprite("assets/mobs/teleport.png", frames=4)
+        self.pixel = Sprite("assets/pixel.png")
         self.teleporte.set_total_duration(1500)
         self.teleporte.play()
 
@@ -125,32 +126,44 @@ class Inimigos:
             points.reverse()
         return points
 
-    def visao(self, i, range_):
-        mob_x = self.mobs[i][0].x + self.mobs[i][0].width/2
-        mob_y = self.mobs[i][0].y + self.mobs[i][0].height/2
-        player_x = self.player.x + self.player.width/2
-        player_y = self.player.y + self.player.height/2
-        dist = (abs(mob_x - player_x) + abs(mob_y - player_y))
-        if dist <= self.visap_mob:
-            self.visap_mob = range_ * 1.5
+    def visao(self, i, range_, face):
+        mob1 = self.mobs[i][face]
+        mob2 = self.player
+        dist = self.distancia(mob1, mob2)
+        if dist <= self.ref[i][2]:
+            self.ref[i][2] = int(range_ * 1.5)
             return True
-        self.visap_mob = range_
+        self.ref[i][2] = range_
         return False
+
+    def distancia(self, mob1, mob2):
+        x1 = mob1.x - (mob1.width/2)
+        y1 = mob1.y - (mob1.height/2)
+        x2 = mob2.x - (mob2.width/2)
+        y2 = mob2.y - (mob2.height/2)
+        return abs(x1 - x2) + abs(y1 - y2)
 
     '''the range_ argument represents the maximum shooting distance at which the shooter will start firing.
         and obstacles is a list of obstacles, shooter and target are both pygame Sprites'''
 
-    def visao_em_linha(self, shooter, target, range_, obstacles, i):
-        if self.visao(i, range_):
+    def visao_em_linha(self, shooter, target, range_, obstacles, i, face):
+        visao = self.visao(i, range_, face)
+        if visao:
             line_of_sight = self.get_line(shooter.rect.center, target.rect.center)
+            # self.desenha_linha(line_of_sight)
             zone = shooter.rect.inflate(range_, range_)
             obstacles_list = [rectangle.rect for rectangle in obstacles]  # to support indexing
             obstacles_in_sight = zone.collidelistall(obstacles_list)
-            for x in range(1, len(line_of_sight), 5):
+            for x in range(1, len(line_of_sight), 1):
                 for obs_index in obstacles_in_sight:
                     if obstacles_list[obs_index].collidepoint(line_of_sight[x]):
                         return False
             return True
+
+    def desenha_linha(self, line):
+        for i in line:
+            self.pixel.x, self.pixel.y = i
+            self.pixel.draw()
 
     def cria_mobs(self):
         tipos = []
@@ -171,7 +184,7 @@ class Inimigos:
                     exec(f"self.{mob}_morto.x = 5000")
                     exec(f"self.{mob}.append(self.{mob}_morto)")
                     exec(f"self.mobs.append(self.{mob})")
-                    self.ref.append([self.a, self.b])
+                    self.ref.append([self.a, self.b, var.VISAO_MOB])
         return self.mobs
 
     def esqueleto_levanta(self, i):
@@ -204,7 +217,7 @@ class Inimigos:
                     h = 1
                 if self.visao_em_linha(self.player,
                                        self.mobs[i][face],
-                                       400, obstaculos[var.MAPA_FLOOR], i):
+                                       400, obstaculos[var.MAPA_FLOOR], i, face):
                     if 'necromancer' in self.info_mobs[i][6]:
                         self.info_mobs[i] = self.movimenta_mago(i, face, mapa[var.MAPA_FLOOR])
                         self.teleporte.x = self.mobs[i][face].x + (self.mobs[i][face].width/2) - (self.teleporte.width/2)
